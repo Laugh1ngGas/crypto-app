@@ -1,4 +1,4 @@
-# crypto-app <br />
+# Crypto App <br />
 
 ## EN
 
