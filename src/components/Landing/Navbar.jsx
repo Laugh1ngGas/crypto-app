@@ -1,8 +1,9 @@
 import React from 'react';
-import logo from '../assets/logo.png'
-import {navItems} from '../constants'
-import {Menu, X} from 'lucide-react'
+import logo from '../../assets/logo.png'
+import { navItems } from '../../constants'
+import { Menu, X } from 'lucide-react'
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Navabr = () => {
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -26,9 +27,9 @@ const Navabr = () => {
                             </li>
                         ))}
                     </ul>
-                    <div className="hidden lg:flex justify-center space-x-12 items-center">
-                        <a href="#" className="py-2 px-3 border rounded-md">Sign In</a>
-                        <a href="#" className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md">Sign Up</a>
+                    <div className="hidden lg:flex justify-center space-x-8 items-center">
+                        <Link to="/form" className="py-2 px-3 border rounded-md">Sign In</Link>
+                        <Link to="/form" className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md">Sign Up</Link>  
                     </div>
                     <div className="lg:hidden md:flex flex-col justify-end">
                         <button onClick={toggleNavbar}>{mobileDrawerOpen ? <X/> : <Menu/>}</button>
@@ -41,9 +42,9 @@ const Navabr = () => {
                             <li key={index} className="py-4"><a href={item.href}>{item.label}</a></li>)
                         )}
                     </ul>
-                    <div className="flex space-x-6">
-                        <a href="#" className="py-2 px-3 border rounded-md">Sign In</a>
-                        <a href="#" className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md">Sign Up</a>
+                    <div className="flex space-x-6 mt-4">
+                        <Link to={"/form"} className="py-2 px-3 border rounded-md">Sign In</Link>
+                        <Link to={"/form"} className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md">Sign Up</Link>
                     </div>
                 </div>
                 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { testimonials } from "../constants";
+import { testimonials } from "../../constants";
 
 
 const Testimonials = () => {
@@ -17,7 +17,7 @@ const Testimonials = () => {
                                 <h6>
                                     {testimonial.user}
                                 </h6>
-                                <span className="tyxt-sm font-normal italic text-neutral-600">
+                                <span className="text-sm font-normal italic text-neutral-600">
                                     {testimonial.company}
                                 </span>
                             </div>
