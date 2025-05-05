@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckCircle2 } from "lucide-react";
 import codeImg from "../../assets/code.jpg";
 import checkList, { checklistItems } from "../../constants";

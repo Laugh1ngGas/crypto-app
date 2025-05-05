@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "../components/Landing/Navbar.jsx";
 import HeroSection from "../components/Landing/HeroSection.jsx";
 import FeatureSection from "../components/Landing/FeatureSection.jsx";
