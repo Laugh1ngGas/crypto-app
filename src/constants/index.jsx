@@ -1,9 +1,4 @@
-import { BotMessageSquare } from "lucide-react";
-import { BatteryCharging } from "lucide-react";
-import { Fingerprint } from "lucide-react";
-import { ShieldHalf } from "lucide-react";
-import { PlugZap } from "lucide-react";
-import { GlobeLock } from "lucide-react";
+import { Lock, Zap, CircleDollarSign, MonitorSmartphone, Globe, Headset, Blocks } from "lucide-react";
 
 import user1 from "../assets/profile-pictures/user1.jpg";
 import user2 from "../assets/profile-pictures/user2.jpg";
@@ -13,10 +8,25 @@ import user5 from "../assets/profile-pictures/user5.jpg";
 import user6 from "../assets/profile-pictures/user6.jpg";
 
 export const navItems = [
-  { label: "Features", href: "#" },
-  { label: "Workflow", href: "#" },
-  { label: "Pricing", href: "#" },
-  { label: "Testimonials", href: "#" },
+  { label: "Buy Crypto", href: "#" },
+  { label: "Markets", href: "#" },
+  {
+    label: "Trade",
+    submenu: [
+      { label: "Spot", href: "#" },
+      { label: "Margin", href: "#" },
+      { label: "P2P", href: "#" },
+      { label: "Swap", href: "#" },
+    ],
+  },
+  {
+    label: "More",
+    submenu: [
+      { label: "Academy", href: "#" },
+      { label: "Blog", href: "#" },
+      { label: "Careers", href: "#" },
+    ],
+  },
 ];
 
 export const testimonials = [
@@ -24,77 +34,83 @@ export const testimonials = [
     user: "John Doe",
     company: "Stellar Solutions",
     image: user1,
-    text: "I am extremely satisfied with the services provided. The team was responsive, professional, and delivered results beyond my expectations.",
+    text: "The perfect exchange for beginners. Clean UI and easy to start trading.",
   },
   {
     user: "Jane Smith",
     company: "Blue Horizon Technologies",
     image: user2,
-    text: "I couldn't be happier with the outcome of our project. The team's creativity and problem-solving skills were instrumental in bringing our vision to life",
+    text: "Execution speed is top-notch. I place an order, and it’s filled instantly.",
   },
   {
     user: "David Johnson",
     company: "Quantum Innovations",
     image: user3,
-    text: "Working with this company was a pleasure. Their attention to detail and commitment to excellence are commendable. I would highly recommend them to anyone looking for top-notch service.",
+    text: "Would love to see more UAH trading pairs, but overall it’s excellent. Support is quick.",
   },
   {
     user: "Ronee Brown",
     company: "Fusion Dynamics",
     image: user4,
-    text: "Working with the team at XYZ Company was a game-changer for our project. Their attention to detail and innovative solutions helped us achieve our goals faster than we thought possible. We are grateful for their expertise and professionalism!",
+    text: "The mobile app is super handy. I can trade from anywhere without limitations.",
   },
   {
     user: "Michael Wilson",
     company: "Visionary Creations",
     image: user5,
-    text: "I am amazed by the level of professionalism and dedication shown by the team. They were able to exceed our expectations and deliver outstanding results.",
+    text: "I had doubts at first, but after the first withdrawal I was impressed. Fast and transparent.",
   },
   {
     user: "Emily Davis",
     company: "Synergy Systems",
     image: user6,
-    text: "The team went above and beyond to ensure our project was a success. Their expertise and dedication are unmatched. I look forward to working with them again in the future.",
+    text: "Lower fees than Binance! And they support UAH — huge advantage.",
   },
 ];
 
 export const features = [
   {
-    icon: <BotMessageSquare />,
-    text: "Drag-and-Drop Interface",
+    icon: <Lock />,
+    text: "Bank-Level Security",
     description:
-      "Easily design and arrange your VR environments with a user-friendly drag-and-drop interface.",
+      "95% of funds stored in cold wallets. 2FA, encryption, and regular audits ensure protection.",
   },
   {
-    icon: <Fingerprint />,
-    text: "Multi-Platform Compatibility",
+    icon: <Zap />,
+    text: "Ultra-Fast Trading Engine",
     description:
-      "Build VR applications that run seamlessly across multiple platforms, including mobile, desktop, and VR headsets.",
+      "Orders are executed in milliseconds — with real-time price updates and minimal latency.",
   },
   {
-    icon: <ShieldHalf />,
-    text: "Built-in Templates",
+    icon: <CircleDollarSign />,
+    text: "Transparent & Low Fees",
     description:
-      "Jumpstart your VR projects with a variety of built-in templates for different types of applications and environments.",
+      "Flat fee structure with no hidden charges. The more you trade — the lower your fees.",
   },
   {
-    icon: <BatteryCharging />,
-    text: "Real-Time Preview",
+    icon: <MonitorSmartphone />,
+    text: "Powerful Mobile App",
     description:
-      "Preview your VR application in real-time as you make changes, allowing for quick iterations and adjustments.",
+      "Full-featured exchange on your phone. Available for iOS and Android.",
   },
   {
-    icon: <PlugZap />,
-    text: "Collaboration Tools",
+    icon: <Globe />,
+    text: "Multi-Currency Support",
     description:
-      "Work together with your team in real-time on VR projects, enabling seamless collaboration and idea sharing.",
+      "Deposit and withdraw in UAH, USD, EUR. Visa and MasterCard accepted.",
   },
   {
-    icon: <GlobeLock />,
-    text: "Analytics Dashboard",
+    icon: <Headset />,
+    text: "Dedicated Support Team",
     description:
-      "Gain valuable insights into user interactions and behavior within your VR applications with an integrated analytics dashboard.",
+      "24/7 customer support with fast response via live chat, email, and Telegram.",
   },
+  // {
+  //   icon: <Blocks />,
+  //   text: "Browser Extension",
+  //   description:
+  //     "Trade directly from your browser! Access portfolio, charts, and alerts via Chrome or Firefox plugin.",
+  // },
 ];
 
 export const checklistItems = [
@@ -153,26 +169,24 @@ export const pricingOptions = [
   },
 ];
 
-export const resourcesLinks = [
-  { href: "#", text: "Getting Started" },
-  { href: "#", text: "Documentation" },
-  { href: "#", text: "Tutorials" },
-  { href: "#", text: "API Reference" },
-  { href: "#", text: "Community Forums" },
-];
-
-export const platformLinks = [
-  { href: "#", text: "Features" },
-  { href: "#", text: "Supported Devices" },
-  { href: "#", text: "System Requirements" },
-  { href: "#", text: "Downloads" },
-  { href: "#", text: "Release Notes" },
-];
-
 export const communityLinks = [
-  { href: "#", text: "Events" },
-  { href: "#", text: "Meetups" },
-  { href: "#", text: "Conferences" },
-  { href: "#", text: "Hackathons" },
-  { href: "#", text: "Jobs" },
+  { href: "#", text: "" },
+  { href: "#", text: "" },
+  { href: "#", text: "" },
+  { href: "#", text: "" },
+  { href: "#", text: "" },
+];
+
+export const aboutUsLinks = [
+  { href: "#", text: "About" },
+  { href: "#", text: "Announcements" },
+  { href: "#", text: "Blog" },
+  { href: "#", text: "Community" },
+  { href: "#", text: "Downloads" },
+];
+
+export const supportLinks = [
+  { href: "#", text: "Chat Support" },
+  { href: "#", text: "Support Center" },
+  { href: "#", text: "Product Feedback & Suggestions" },
 ];
