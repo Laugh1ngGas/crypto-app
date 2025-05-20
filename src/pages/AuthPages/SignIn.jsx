@@ -9,6 +9,7 @@ import GoogleAuthButton from "../../components/Auth/GoogleAuthButton";
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "../../firebase/auth";
 import Loader from "../../components/common/LoadingScreen";
 import {validateSignIn} from "../../utils/validation";
+import { doc, db, setDoc } from "../../firebase/firebase-config";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
