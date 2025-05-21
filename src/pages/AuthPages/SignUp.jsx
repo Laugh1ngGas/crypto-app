@@ -6,10 +6,9 @@ import AuthInput from "../../components/Auth/AuthInput";
 import PasswordInput from "../../components/Auth/PasswordInput";
 import AuthDivider from "../../components/Auth/AuthDivider";
 import GoogleAuthButton from "../../components/Auth/GoogleAuthButton";
-import { doCreateUserWithEmailAndPassword, doSignInWithGoogle, doSendEmailVerification } from "../../firebase/auth";
+import { doCreateUserWithEmailAndPassword, doSignInWithGoogle } from "../../firebase/auth";
 import Loader from "../../components/common/LoadingScreen";
 import { validateSignUp } from "../../utils/validation";
-import { FirebaseError } from "firebase/app";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
@@ -17,11 +16,13 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
   const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setVerificationSent(false);
 
     const validationError = validateSignUp(nickname, email, password);
     if (validationError) {
@@ -32,15 +33,16 @@ const SignUp = () => {
     setLoading(true);
     try {
       await doCreateUserWithEmailAndPassword(email, password, nickname);
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/dashboard");
-      }, 3000);
-    } catch (err) {
+      setVerificationSent(true);
       setLoading(false);
 
+      setTimeout(() => {
+        navigate("/signin");
+      }, 5000);
+    } catch (err) {
+      setLoading(false);
       if (err.code === "auth/email-already-in-use") {
-        setError("This email is already in use. Please use another one.");
+        setError("This email is already in use.");
       } else {
         setError(err.message);
       }
@@ -95,6 +97,12 @@ const SignUp = () => {
           >
             Sign Up
           </button>
+          {verificationSent && (
+            <p className="text-green-500 text-sm mt-2">
+              A verification email has been sent. Please check your inbox and verify your email.
+              You will be redirected to the sign-in page shortly...
+            </p>
+          )}
         </form>
         <AuthDivider />
         <GoogleAuthButton onClick={handleGoogleSignIn} />

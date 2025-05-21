@@ -1,24 +1,35 @@
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const validateEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) return "Email is required.";
+  if (!re.test(email)) return "Invalid email format.";
+  return null;
+};
 
-export const validateSignIn = (email, password) => {
-  if (!email || !emailRegex.test(email)) {
-    return "Please enter a valid email address.";
-  }
-  if (!password) {
-    return "Please enter your password.";
-  }
+export const validatePassword = (password) => {
+  if (!password) return "Password is required.";
+  if (password.length < 6) return "Password must be at least 6 characters.";
+  if (!/[A-Z]/.test(password))
+    return "Password must contain an uppercase letter.";
+  if (!/[a-z]/.test(password))
+    return "Password must contain a lowercase letter.";
+  if (!/[0-9]/.test(password)) return "Password must contain a number.";
+  return null;
+};
+
+export const validateNickname = (nickname) => {
+  if (!nickname) return "Username is required.";
+  if (nickname.length < 3) return "Username must be at least 3 characters.";
   return null;
 };
 
 export const validateSignUp = (nickname, email, password) => {
-  if (!nickname.trim()) {
-    return "Please enter a username.";
-  }
-  if (!email || !emailRegex.test(email)) {
-    return "Please enter a valid email address.";
-  }
-  if (!password || password.length < 6) {
-    return "Password must be at least 6 characters.";
-  }
-  return null;
+  return (
+    validateNickname(nickname) ||
+    validateEmail(email) ||
+    validatePassword(password)
+  );
+};
+
+export const validateSignIn = (email) => {
+  return validateEmail(email);
 };

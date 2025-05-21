@@ -5,6 +5,7 @@ import logo from "../../assets/logo.png";
 import { navItems } from "../../constants";
 import { useAuth } from "../../contexts/authContext"; 
 import { doSignOut } from "../../firebase/auth";
+import SignInSignUpToggle from "../Auth/SignButtonAnimation";
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -112,14 +113,15 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <>
-                <Link to="/signin" className="py-2 px-3 border rounded-md">
-                  Sign In
-                </Link>
-                <Link to="/signup" className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md">
-                  Sign Up
-                </Link>
-              </>
+              // <>
+              //   <Link to="/signin" className="py-2 px-3 border rounded-md">
+              //     Sign In
+              //   </Link>
+              //   <Link to="/signup" className="bg-gradient-to-r from-orange-500 to-orange-800 py-2 px-3 rounded-md">
+              //     Sign Up
+              //   </Link>
+              // </>
+              <SignInSignUpToggle />
             )}
           </div>
 

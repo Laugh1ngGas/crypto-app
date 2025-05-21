@@ -7,6 +7,7 @@ import SignUp from "./pages/AuthPages/SignUp.jsx";
 import NotFoundPage from "./pages/OtherPages/NotFoundPage.jsx";
 import Loader from "./components/common/LoadingScreen.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
+import Cryptocurrencies from "./pages/Cryptocurrencies/Cryptocurrencies.jsx";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -29,8 +30,7 @@ const AppRoutes = () => {
         <Route index path="/" element={<LandingPage />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* <Route path="/markets/overview" element={<Market />} /> */}
-        {/* <Route path="/crypto/buy" element={<BuyCrypto />} /> */}
+        <Route path="/cryptocurrencies" element={<Cryptocurrencies />} />
 
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />

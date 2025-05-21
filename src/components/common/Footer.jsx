@@ -41,6 +41,9 @@ const Footer = () => {
                     </ul>
                 </div>
             </div>
+            <div className="mt-10 border-t border-neutral-700 flex items-center justify-center">
+                <p className="text-sm text-neutral-500 mt-10">© 2025 Crypto App</p>
+            </div>
         </footer>
     );
 };

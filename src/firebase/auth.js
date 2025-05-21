@@ -30,11 +30,20 @@ export const doCreateUserWithEmailAndPassword = async (
       displayName: nickname,
     });
 
-    await sendEmailVerification(user, {
-      url: `${window.location.origin}/`,
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      email: user.email,
+      nickname: nickname,
+      createdAt: new Date(),
     });
 
-    return user;
+    await sendEmailVerification(user, {
+      url: `${window.location.origin}/signin`,
+    });
+
+    await signOut(auth);
+
+    return userCredential;
   } catch (error) {
     console.error("Registration error:", error);
     throw error;

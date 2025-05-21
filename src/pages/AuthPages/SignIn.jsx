@@ -9,8 +9,6 @@ import GoogleAuthButton from "../../components/Auth/GoogleAuthButton";
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "../../firebase/auth";
 import Loader from "../../components/common/LoadingScreen";
 import {validateSignIn} from "../../utils/validation";
-import { db } from "../../firebase/firebase-config";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -20,39 +18,36 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  setLoading(true);
-  try {
-    const userCredential = await doSignInWithEmailAndPassword(email, password);
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    if (!userCredential.user.emailVerified) {
+    const validationError = validateSignIn(email, password);
+    if (validationError) {
+      setError(validationError);
       setLoading(false);
-      setError("Please verify your email before signing in.");
       return;
     }
 
-    const userRef = doc(db, "users", userCredential.user.uid);
-    const userSnap = await getDoc(userRef);
-    if (!userSnap.exists()) {
-      await setDoc(userRef, {
-        uid: userCredential.user.uid,
-        email: userCredential.user.email,
-        nickname: userCredential.user.displayName || "",
-        createdAt: new Date(),
-      });
-    }
+    try {
+      const userCredential = await doSignInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
 
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/dashboard");
-    }, 3000);
+      if (!user.emailVerified) {
+        setLoading(false);
+        setError("Please verify your email before signing in.");
+        return;
+      }
+
+      setTimeout(() => {
+        setLoading(false);
+        navigate("/dashboard");
+      }, 3000);
     } catch (err) {
       setLoading(false);
       setError(err.message);
     }
   };
-
 
   const handleGoogleSignIn = async () => {
     setError("");

@@ -34,37 +34,37 @@ export const testimonials = [
     user: "John Doe",
     company: "Stellar Solutions",
     image: user1,
-    text: "The perfect exchange for beginners. Clean UI and easy to start trading.",
+    text: "Finally, an app that shows real-time crypto prices without all the clutter. Clean and simple!",
   },
   {
     user: "Jane Smith",
     company: "Blue Horizon Technologies",
     image: user2,
-    text: "Execution speed is top-notch. I place an order, and it’s filled instantly.",
+    text: "I love how I can connect my wallet and instantly see my balance in the currency I choose. Makes tracking so much easier.",
   },
   {
     user: "David Johnson",
     company: "Quantum Innovations",
     image: user3,
-    text: "Would love to see more UAH trading pairs, but overall it’s excellent. Support is quick.",
+    text: "The interface is super user-friendly — perfect for daily price tracking and quick market overviews.",
   },
   {
     user: "Ronee Brown",
     company: "Fusion Dynamics",
     image: user4,
-    text: "The mobile app is super handy. I can trade from anywhere without limitations.",
+    text: "Login with Google and email verification adds a nice layer of security. I feel safe using it.",
   },
   {
     user: "Michael Wilson",
     company: "Visionary Creations",
     image: user5,
-    text: "I had doubts at first, but after the first withdrawal I was impressed. Fast and transparent.",
+    text: "I use this app to analyze when to buy or sell. The charts and market data are really helpful.",
   },
   {
     user: "Emily Davis",
     company: "Synergy Systems",
     image: user6,
-    text: "Lower fees than Binance! And they support UAH — huge advantage.",
+    text: "Support for multiple currencies is a great feature! I live in Europe, so seeing everything in euros is very convenient.",
   },
 ];
 
