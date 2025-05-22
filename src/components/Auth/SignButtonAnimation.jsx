@@ -13,12 +13,12 @@ const SplitSwitchButton = () => {
 
   return (
     <div
-      className="relative w-48 h-12 rounded-full border border-transparent bg-neutral-400  cursor-pointer select-none overflow-hidden"
+      className="relative w-48 h-12 rounded-full border border-transparent backdrop-blur-lg  cursor-pointer select-none overflow-hidden"
       onMouseLeave={() => setHovered(null)}
     >
     <button
       type="button"
-      className="relative w-full h-full rounded-full bg-neutral-900 text-white overflow-hidden select-none flex"
+      className="relative w-full h-full rounded-full text-white overflow-hidden select-none flex"
       onMouseLeave={() => setHovered(null)}
     >
       <div
