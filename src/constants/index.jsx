@@ -1,5 +1,17 @@
 import { Lock, Zap, CircleDollarSign, MonitorSmartphone, Globe, Headset, Blocks } from "lucide-react";
 
+import {
+  FaDiscord,
+  FaTelegramPlane,
+  FaTiktok,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaRedditAlien,
+  FaEllipsisH,
+} from "react-icons/fa";
+
 import user1 from "../assets/profile-pictures/user1.jpg";
 import user2 from "../assets/profile-pictures/user2.jpg";
 import user3 from "../assets/profile-pictures/user3.jpg";
@@ -9,22 +21,13 @@ import user6 from "../assets/profile-pictures/user6.jpg";
 
 export const navItems = [
   { label: "Buy Crypto", href: "#" },
-  { label: "Markets", href: "#" },
-  {
-    label: "Trade",
-    submenu: [
-      { label: "Spot", href: "#" },
-      { label: "Margin", href: "#" },
-      { label: "P2P", href: "#" },
-      { label: "Swap", href: "#" },
-    ],
-  },
+  { label: "Cryptocurrencies", href: "/cryptocurrencies" },
   {
     label: "More",
     submenu: [
-      { label: "Academy", href: "#" },
+      { label: "About", href: "#" },
       { label: "Blog", href: "#" },
-      { label: "Careers", href: "#" },
+      { label: "Support", href: "#" },
     ],
   },
 ];
@@ -170,11 +173,15 @@ export const pricingOptions = [
 ];
 
 export const communityLinks = [
-  { href: "#", text: "" },
-  { href: "#", text: "" },
-  { href: "#", text: "" },
-  { href: "#", text: "" },
-  { href: "#", text: "" },
+  { href: "https://discord.com", icon: <FaDiscord />, label: "Discord" },
+  { href: "https://telegram.org", icon: <FaTelegramPlane />, label: "Telegram" },
+  { href: "https://tiktok.com", icon: <FaTiktok />, label: "TikTok" },
+  { href: "https://facebook.com", icon: <FaFacebookF />, label: "Facebook" },
+  { href: "https://twitter.com", icon: <FaTwitter />, label: "X" },
+  { href: "https://instagram.com", icon: <FaInstagram />, label: "Instagram" },
+  { href: "https://youtube.com", icon: <FaYoutube />, label: "YouTube" },
+  { href: "https://reddit.com", icon: <FaRedditAlien />, label: "Reddit" },
+  { href: "#", icon: <FaEllipsisH />, label: "More" },
 ];
 
 export const aboutUsLinks = [

@@ -56,7 +56,7 @@ const SignUp = () => {
       await doSignInWithGoogle();
       setTimeout(() => {
         setLoading(false);
-        navigate("/dashboard");
+        navigate("/dashboard/portfolio");
       }, 3000);
     } catch (err) {
       setLoading(false);

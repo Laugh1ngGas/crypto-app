@@ -1,13 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import CryptoChart from "./components/Charts/CryptoChart.jsx";
 
 import LandingPage from "./pages/LandingPage/LandingPage.jsx";
 import SignIn from "./pages/AuthPages/SignIn.jsx";
 import SignUp from "./pages/AuthPages/SignUp.jsx";
 import NotFoundPage from "./pages/OtherPages/NotFoundPage.jsx";
 import Loader from "./components/common/LoadingScreen.jsx";
-import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import Cryptocurrencies from "./pages/Cryptocurrencies/Cryptocurrencies.jsx";
+import Portfolio from "./pages/Dashboard/Portfolio.jsx";
+import DashboardCryptocurrencies from "./pages/Dashboard/Cryptocurrencies.jsx";
+import VirtualPortfolio from "./pages/Dashboard/VirtualPortfolio.jsx";
+import Settings from "./pages/Dashboard/Settings.jsx";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -27,16 +31,21 @@ const AppRoutes = () => {
     <>
       {loading && <Loader />}
       <Routes>
-        <Route index path="/" element={<LandingPage />} />
+      <Route index path="/" element={<LandingPage />} />
+      
+      <Route path="/cryptocurrencies" element={<Cryptocurrencies />} />
+      <Route path="/cryptocurrencies/:symbol" element={<CryptoChart />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/cryptocurrencies" element={<Cryptocurrencies />} />
+      <Route path="/dashboard/portfolio" element={<Portfolio />} />
+      <Route path="/dashboard/cryptocurrencies" element={<DashboardCryptocurrencies />} />
+      {/* <Route path="/dashboard/cryptocurrencies/:symbol" element={<DashboardCryptocurrencies />} /> */}
+      <Route path="/dashboard/virtualportfolio" element={<VirtualPortfolio />} />
+      <Route path="/dashboard/settings" element={<Settings />} />
 
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
     </>
   );
 };
