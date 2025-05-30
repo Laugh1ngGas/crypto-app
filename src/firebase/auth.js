@@ -11,7 +11,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection } from "firebase/firestore";
 
 export const doCreateUserWithEmailAndPassword = async (
   email,
@@ -34,6 +34,20 @@ export const doCreateUserWithEmailAndPassword = async (
       uid: user.uid,
       email: user.email,
       nickname: nickname,
+      createdAt: new Date(),
+      settings: {
+        theme: "dark",
+        preferredCurrency: "usd",
+        language: "en",
+      },
+      profileData: {
+        displayName: nickname,
+      },
+    });
+
+    const portfolioRef = collection(db, "users", user.uid, "portfolio");
+    await setDoc(doc(portfolioRef, "_placeholder"), {
+      note: "Initial placeholder document.",
       createdAt: new Date(),
     });
 
@@ -67,6 +81,20 @@ export const doSignInWithGoogle = async () => {
       uid: user.uid,
       email: user.email,
       nickname: user.displayName || "",
+      createdAt: new Date(),
+      settings: {
+        theme: "dark",
+        preferredCurrency: "usd",
+        language: "en",
+      },
+      profileData: {
+        displayName: user.displayName || "",
+      },
+    });
+
+    const portfolioRef = collection(db, "users", user.uid, "portfolio");
+    await setDoc(doc(portfolioRef, "_placeholder"), {
+      note: "Initial placeholder document.",
       createdAt: new Date(),
     });
   }

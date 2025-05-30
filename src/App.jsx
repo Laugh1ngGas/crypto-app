@@ -12,6 +12,7 @@ import Portfolio from "./pages/Dashboard/Portfolio.jsx";
 import DashboardCryptocurrencies from "./pages/Dashboard/Cryptocurrencies.jsx";
 import VirtualPortfolio from "./pages/Dashboard/VirtualPortfolio.jsx";
 import Settings from "./pages/Dashboard/Settings.jsx";
+import DashboardCryptoCharts from "./components/Dashboard/CryptoChart.jsx";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -38,7 +39,7 @@ const AppRoutes = () => {
 
       <Route path="/dashboard/portfolio" element={<Portfolio />} />
       <Route path="/dashboard/cryptocurrencies" element={<DashboardCryptocurrencies />} />
-      {/* <Route path="/dashboard/cryptocurrencies/:symbol" element={<DashboardCryptocurrencies />} /> */}
+      <Route path="/dashboard/cryptocurrencies/:symbol" element={<DashboardCryptoCharts />} />
       <Route path="/dashboard/virtualportfolio" element={<VirtualPortfolio />} />
       <Route path="/dashboard/settings" element={<Settings />} />
 

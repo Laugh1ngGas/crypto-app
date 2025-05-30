@@ -11,45 +11,61 @@ import {
 } from "lucide-react";
 
 const Sidebar = () => {
-  const location = useLocation(); // <-- отримаємо поточний шлях
-  const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    const savedState = localStorage.getItem("sidebarCollapsed");
+    return savedState ? JSON.parse(savedState) : false;
+  });
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    localStorage.setItem("sidebarCollapsed", JSON.stringify(collapsed));
+  }, [collapsed]);
 
   useEffect(() => {
-    if (isMobile) setCollapsed(true);
-  }, [isMobile]);
+  const checkMobile = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  checkMobile();
+  window.addEventListener("resize", checkMobile);
+  return () => window.removeEventListener("resize", checkMobile);
+}, []);
+
+useEffect(() => {
+  if (isMobile) {
+    setCollapsed(true);
+  } else {
+    const savedState = localStorage.getItem("sidebarCollapsed");
+    setCollapsed(savedState ? JSON.parse(savedState) : false);
+  }
+}, [isMobile]);
+
 
   const toggleSidebar = () => {
     if (!isMobile) setCollapsed(!collapsed);
   };
 
-  const isActive = (path) => location.pathname === path;
+ const isActive = (path) => location.pathname === path;
 
-  const linkClasses = (path) =>
+  const isPathMatch = (prefix) => location.pathname.startsWith(prefix);
+
+  const linkClasses = (path, isPrefix = false) =>
     `flex items-center cursor-pointer text-sm transition-colors duration-200 px-3 py-2 ${
       collapsed ? "justify-center" : "space-x-2"
     } ${
-      isActive(path)
+      (isPrefix ? isPathMatch(path) : isActive(path))
         ? "bg-neutral-800 text-orange-400 font-semibold rounded-lg"
         : "hover:text-orange-400 text-white"
     }`;
 
+
   return (
-    <div
-      className={`group relative h-screen bg-neutral-900 text-white rounded-2xl shadow-lg p-4 flex flex-col justify-between transition-all duration-300 ${
-        collapsed ? "w-20 items-center" : "w-64"
-      }`}
-    >
+      <div
+        className={`group relative h-screen bg-neutral-900 text-white rounded-2xl shadow-lg p-4 flex flex-col justify-between transition-all duration-300
+          ${collapsed ? "w-20" : "w-64"} 
+          flex-shrink-0`} 
+      >
       <div className="w-full">
         <div className="flex items-center mb-6">
           <Link to="/" className={`flex items-center ${collapsed ? "ml-1" : "space-x-2"}`}>
@@ -65,18 +81,21 @@ const Sidebar = () => {
               {!collapsed && <span>Portfolio</span>}
             </Link>
           </li>
+
           <li>
-            <Link to="/dashboard/cryptocurrencies" className={linkClasses("/dashboard/cryptocurrencies")}>
+            <Link to="/dashboard/cryptocurrencies" className={linkClasses("/dashboard/cryptocurrencies", true)}>
               <CircleDollarSign size={24} />
               {!collapsed && <span>Cryptocurrencies</span>}
             </Link>
           </li>
+
           <li>
             <Link to="/dashboard/virtualportfolio" className={linkClasses("/dashboard/virtualportfolio")}>
               <BriefcaseBusiness size={24} />
               {!collapsed && <span>Create virtual portfolio</span>}
             </Link>
           </li>
+
           <li>
             <Link to="/dashboard/settings" className={linkClasses("/dashboard/settings")}>
               <SettingsIcon size={24} />
