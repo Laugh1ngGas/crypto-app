@@ -3,11 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import {
   WalletCards,
-  CircleDollarSign,
   BriefcaseBusiness,
   Settings as SettingsIcon,
   ChevronLeft,
-  ChevronRight
+  ChevronRight, 
+  ArrowRightLeft,
+  Database,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -73,7 +74,6 @@ useEffect(() => {
             {!collapsed && <span className="text-xl tracking-tight">Crypto App</span>}
           </Link>
         </div>
-
         <ul className="space-y-6 w-full">
           <li>
             <Link to="/dashboard/portfolio" className={linkClasses("/dashboard/portfolio")}>
@@ -81,21 +81,24 @@ useEffect(() => {
               {!collapsed && <span>Portfolio</span>}
             </Link>
           </li>
-
           <li>
             <Link to="/dashboard/cryptocurrencies" className={linkClasses("/dashboard/cryptocurrencies", true)}>
-              <CircleDollarSign size={24} />
+              <Database size={24} />
               {!collapsed && <span>Cryptocurrencies</span>}
             </Link>
           </li>
-
           <li>
             <Link to="/dashboard/virtualportfolio" className={linkClasses("/dashboard/virtualportfolio")}>
               <BriefcaseBusiness size={24} />
-              {!collapsed && <span>Create virtual portfolio</span>}
+              {!collapsed && <span>Virtual portfolio</span>}
             </Link>
           </li>
-
+          <li>
+            <Link to="/dashboard/trade" className={linkClasses("/dashboard/settings")}>
+              <ArrowRightLeft size={24} />
+              {!collapsed && <span>Trade</span>}
+            </Link>
+          </li>
           <li>
             <Link to="/dashboard/settings" className={linkClasses("/dashboard/settings")}>
               <SettingsIcon size={24} />

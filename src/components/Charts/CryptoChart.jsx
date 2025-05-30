@@ -11,6 +11,7 @@ const CryptoChart = () => {
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const { userLoggedIn } = useAuth();
+  const [page, setPage] = useState(0);
 
   const [hideToolbar, setHideToolbar] = useState(false);
   const [priceData, setPriceData] = useState(null);

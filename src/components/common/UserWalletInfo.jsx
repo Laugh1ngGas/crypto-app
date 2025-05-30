@@ -5,7 +5,7 @@ import {
   ChevronRight,
   Settings as SettingsIcon,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";  // <-- додано useNavigate
+import { Link, useNavigate } from "react-router-dom"; 
 import { doSignOut } from "../../firebase/auth";
 
 const shortenAddress = (address) => {

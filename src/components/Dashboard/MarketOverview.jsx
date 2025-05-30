@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, ChevronUp, ChevronDown } from "lucide-react";
 
 const COINGECKO_MARKETS_URL = "https://api.coingecko.com/api/v3/coins/markets";
 const BINANCE_INFO_URL = "https://api.binance.com/api/v3/exchangeInfo";
@@ -90,8 +90,9 @@ const MarketOverview = () => {
           const coin = flatData.find((c) => c.id === pair.id);
           return {
             id: pair.id,
-            symbol: pair.baseSymbol + "USD",
-            name: binanceNames[pair.baseSymbol] || pair.baseSymbol,
+            symbol: pair.baseSymbol,
+            displaySymbol: pair.baseSymbol + "USD",
+            name: coin?.name || pair.baseSymbol,
             image: coin?.image || "",
             price: 0,
             change: 0,
@@ -128,7 +129,7 @@ const MarketOverview = () => {
     const interval = setInterval(() => {
       setAllCoinData((prev) =>
         prev.map((coin) => {
-          const update = pricesRef.current[coin.symbol];
+          const update = pricesRef.current[coin.displaySymbol];
           return update
             ? {
                 ...coin,
@@ -201,85 +202,159 @@ const MarketOverview = () => {
         <table className="w-full table-fixed text-sm">
           <thead className="bg-neutral-900 text-neutral-400">
             <tr>
-              <th className="text-left px-4 py-3 w-[200px]">Name</th>
-              <th className="text-left px-4 py-3 w-[160px]">Price / 24H</th>
+              <th
+                className="text-left px-4 py-3 w-[200px] cursor-pointer select-none"
+                onClick={() => toggleSort("name")}
+              >
+                <div className="flex items-center gap-1">
+                  Name
+                  <div className="flex flex-col ml-1">
+                    <ChevronUp
+                      className={`w-3 h-3 ${
+                        sortConfig.key === "name" && sortConfig.direction === "asc"
+                          ? "text-white"
+                          : "text-neutral-500"
+                      }`}
+                    />
+                    <ChevronDown
+                      className={`w-3 h-3 -mt-1 ${
+                        sortConfig.key === "name" && sortConfig.direction === "desc"
+                          ? "text-white"
+                          : "text-neutral-500"
+                      }`}
+                    />
+                  </div>
+                </div>
+              </th>
+
+              <th
+                className="text-left px-4 py-3 w-[160px] cursor-pointer select-none"
+                onClick={() => toggleSort("price")}
+              >
+                <div className="flex items-center gap-1">
+                  Price / 24H
+                  <div className="flex flex-col ml-1">
+                    <ChevronUp
+                      className={`w-3 h-3 ${
+                        sortConfig.key === "price" && sortConfig.direction === "asc"
+                          ? "text-white"
+                          : "text-neutral-500"
+                      }`}
+                    />
+                    <ChevronDown
+                      className={`w-3 h-3 -mt-1 ${
+                        sortConfig.key === "price" && sortConfig.direction === "desc"
+                          ? "text-white"
+                          : "text-neutral-500"
+                      }`}
+                    />
+                  </div>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
-  {allCoinData.length === 0 ? (
-    <tr>
-      <td colSpan="2" className="text-center py-6 text-neutral-400">
-        Loading coins...
-      </td>
-    </tr>
-  ) : (
-    allCoinData
-      .filter((coin) =>
-        coin.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE)
-      .map((coin) => (
-        <tr
-          key={coin.symbol}
-          className="border-t border-neutral-800 hover:bg-neutral-900 transition cursor-pointer"
-        >
-          <td className="px-4 py-4">
-            <Link
-              to={`/dashboard/cryptocurrencies/${coin.symbol}`}
-              className="flex items-center gap-3 overflow-hidden"
-            >
-              <img
-                src={coin.image}
-                alt={coin.name}
-                className="w-8 h-8 rounded-full flex-shrink-0"
-              />
-              <div className="truncate">
-                <div className="font-medium truncate">{coin.name}</div>
-                <div className="text-xs text-neutral-400 uppercase truncate">
-                  {coin.symbol.replace("USD", "")}
-                </div>
-              </div>
-            </Link>
-          </td>
-          <td className="px-4 py-4">
-            <Link to={`/dashboard/cryptocurrencies/${coin.symbol}`}>
-              <div>${pricesRef.current[coin.symbol]?.price?.toFixed(4) || "0.0000"}</div>
-              <div
-                className={`text-sm font-semibold ${
-                  pricesRef.current[coin.symbol]?.change > 0
-                    ? "text-green-500"
-                    : pricesRef.current[coin.symbol]?.change < 0
-                    ? "text-red-500"
-                    : "text-neutral-400"
-                }`}
-              >
-                {pricesRef.current[coin.symbol]?.change?.toFixed(2) || "0.00"}%
-              </div>
-            </Link>
-          </td>
-        </tr>
-      ))
-  )}
-</tbody>
-
+            {allCoinData.length === 0 ? (
+              <tr>
+                <td colSpan="2" className="text-center py-6 text-neutral-400">
+                  Loading coins...
+                </td>
+              </tr>
+            ) : (
+              visibleCoins.map((coin) => (
+                <tr
+                  key={coin.symbol}
+                  className="border-t border-neutral-800 hover:bg-neutral-900 transition cursor-pointer"
+                >
+                  <td className="px-4 py-4">
+                    <Link
+                      to={`/dashboard/cryptocurrencies/${coin.symbol}`}
+                      className="flex items-center gap-3 overflow-hidden"
+                    >
+                      <img
+                        src={coin.image}
+                        alt={coin.name}
+                        className="w-8 h-8 rounded-full flex-shrink-0"
+                      />
+                      <div className="truncate">
+                        <div className="font-medium truncate">{coin.name}</div>
+                        <div className="text-xs text-neutral-400 uppercase truncate">
+                          {coin.symbol.replace("USD", "")}
+                        </div>
+                      </div>
+                    </Link>
+                  </td>
+                  <td className="px-4 py-4">
+                    <Link to={`/dashboard/cryptocurrencies/${coin.symbol}`}>
+                      <div>${coin.price?.toFixed(4) || "0.00"}</div>
+                      <div
+                        className={`text-sm font-semibold ${
+                          coin.change > 0
+                            ? "text-green-500"
+                            : coin.change < 0
+                            ? "text-red-500"
+                            : "text-neutral-400"
+                        }`}
+                      >
+                        {coin.change?.toFixed(2) || "0.00"}%
+                      </div>
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
         </table>
       </div>
-
-      {/* Pagination (optional) */}
-      <div className="flex justify-center mt-4 gap-2">
+      <div className="flex justify-center mt-4 gap-2 flex-wrap">
         <button
-          className="px-3 py-1 bg-neutral-800 rounded hover:bg-neutral-700 disabled:opacity-50"
+          className="px-3 py-1 rounded hover:bg-neutral-700 disabled:opacity-50"
           onClick={() => setPage((p) => Math.max(0, p - 1))}
           disabled={page === 0}
         >
-          Prev
+          &lt;
         </button>
+        {Array.from({ length: totalPages }, (_, i) => i)
+          .filter((i) => {
+            if (totalPages <= 7) return true;
+            if (i === 0 || i === totalPages - 1) return true;
+            if (Math.abs(i - page) <= 2) return true;
+            if (page <= 2 && i <= 4) return true;
+            if (page >= totalPages - 3 && i >= totalPages - 5) return true;
+            return false;
+          })
+          .reduce((acc, curr, idx, arr) => {
+            if (idx > 0 && curr - arr[idx - 1] > 1) {
+              acc.push("ellipsis");
+            }
+            acc.push(curr);
+            return acc;
+          }, [])
+          .map((item, idx) =>
+            item === "ellipsis" ? (
+              <span key={`ellipsis-${idx}`} className="px-2 py-1 text-neutral-500">
+                ...
+              </span>
+            ) : (
+              <button
+                key={item}
+                onClick={() => setPage(item)}
+                className={`px-3 py-1 rounded ${
+                  page === item
+                    ? "bg-orange-500 text-white"
+                    : "hover:bg-neutral-700"
+                }`}
+              >
+                {item + 1}
+              </button>
+            )
+          )}
         <button
-          className="px-3 py-1 bg-neutral-800 rounded hover:bg-neutral-700 disabled:opacity-50"
-          onClick={() => setPage((p) => p + 1)}
-          disabled={(page + 1) * ITEMS_PER_PAGE >= allCoinData.length}
+          className="px-3 py-1 rounded hover:bg-neutral-700 disabled:opacity-50"
+          onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+          disabled={page >= totalPages - 1}
         >
-          Next
+          &gt;
         </button>
       </div>
     </div>

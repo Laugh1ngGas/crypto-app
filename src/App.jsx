@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CryptoChart from "./components/Charts/CryptoChart.jsx";
-
 import LandingPage from "./pages/LandingPage/LandingPage.jsx";
 import SignIn from "./pages/AuthPages/SignIn.jsx";
 import SignUp from "./pages/AuthPages/SignUp.jsx";
@@ -13,6 +12,7 @@ import DashboardCryptocurrencies from "./pages/Dashboard/Cryptocurrencies.jsx";
 import VirtualPortfolio from "./pages/Dashboard/VirtualPortfolio.jsx";
 import Settings from "./pages/Dashboard/Settings.jsx";
 import DashboardCryptoCharts from "./components/Dashboard/CryptoChart.jsx";
+import Trade from "./pages/Dashboard/Trade.jsx";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -42,6 +42,7 @@ const AppRoutes = () => {
       <Route path="/dashboard/cryptocurrencies/:symbol" element={<DashboardCryptoCharts />} />
       <Route path="/dashboard/virtualportfolio" element={<VirtualPortfolio />} />
       <Route path="/dashboard/settings" element={<Settings />} />
+      <Route path="/dashboard/trade" element={<Trade />} />
 
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />

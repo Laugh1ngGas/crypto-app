@@ -104,7 +104,7 @@ const CryptoChart = () => {
           <TopBar user={currentUser} />
           <div className="flex-1 overflow-y-auto p-4">
             <div className="max-w-7xl mx-auto p-4 space-y-6 text-white">
-                <div className="flex justify-between items-center bg-neutral-900 p-4 rounded-lg">
+                <div className="flex justify-between items-center bg-neutral-900 p-4 rounded-2xl">
                   <div>
                     <div className="text-sm text-gray-400">PRICE / 24H CHANGE</div>
                     <div className="text-xl font-semibold">
@@ -117,13 +117,13 @@ const CryptoChart = () => {
 
                   {userLoggedIn && (
                     <div className="flex gap-3">
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded hover:bg-neutral-700 transition">
+                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
                         Buy
                       </button>
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded hover:bg-neutral-700 transition">
+                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
                         Receive
                       </button>
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded hover:bg-neutral-700 transition">
+                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
                         Send
                       </button>
                     </div>
@@ -165,7 +165,7 @@ const CryptoChart = () => {
                         className="w-full px-4 py-3 rounded-lg bg-neutral-800 text-white placeholder-gray-400"
                       />
 
-                      <button className="bg-gradient-to-r from-orange-500 to-orange-800 px-4 py-3 rounded-lg text-white font-semibold hover:opacity-90">
+                      <button className="bg-gradient-to-r from-orange-500 to-orange-800 px-4 py-3 rounded-3xl text-white font-semibold hover:opacity-90">
                         Swap
                       </button>
                     </div>
@@ -173,15 +173,15 @@ const CryptoChart = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-neutral-900 p-4 rounded">
+                  <div className="bg-neutral-900 p-4 rounded-2xl">
                     <div className="text-sm text-gray-400">FDMC</div>
                     <div className="text-lg">${fdmc ? fdmc.toLocaleString() : "Loading..."}</div>
                   </div>
-                  <div className="bg-neutral-900 p-4 rounded">
+                  <div className="bg-neutral-900 p-4 rounded-2xl">
                     <div className="text-sm text-gray-400">24H VOLUME</div>
                     <div className="text-lg text-red-400">${priceData?.volume?.toLocaleString() || "Loading..."}</div>
                   </div>
-                  <div className="bg-neutral-900 p-4 rounded">
+                  <div className="bg-neutral-900 p-4 rounded-2xl">
                     <div className="text-sm text-gray-400">LIQUIDITY</div>
                     <div className="text-lg">$Loading...</div>
                   </div>

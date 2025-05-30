@@ -5,8 +5,9 @@ import UserWalletInfo from "../common/UserWalletInfo";
 const menuTitles = {
   "/dashboard/portfolio": "Portfolio",
   "/dashboard/cryptocurrencies": "Cryptocurrencies",
-  "/dashboard/virtualportfolio": "Create virtual portfolio",
+  "/dashboard/virtualportfolio": "Virtual portfolio",
   "/dashboard/settings": "Settings",
+  "/dashboard/trade": "Trade",
 };
 
 const TopBar = ({ user }) => {
