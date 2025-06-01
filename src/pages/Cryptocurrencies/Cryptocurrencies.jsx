@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../../components/common/Navbar";
 import { Search } from "lucide-react";
 import Footer from "../../components/common/Footer";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const COINGECKO_MARKETS_URL = "https://api.coingecko.com/api/v3/coins/markets";
 const BINANCE_INFO_URL = "https://api.binance.com/api/v3/exchangeInfo";
@@ -191,7 +192,7 @@ const Cryptocurrencies = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full pl-10 pr-3 py-2 rounded bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-neutral-400"
+            className="w-full pl-10 pr-3 py-2 rounded-xl bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-neutral-400"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -199,90 +200,114 @@ const Cryptocurrencies = () => {
             }}
           />
         </div>
-
-        <table className="min-w-full border text-left table-fixed border-neutral-700">
-          <thead>
-            <tr className="bg-gradient-to-r from-orange-500 to-orange-800 text-white">
-              <th className="w-1/4 p-2 cursor-pointer" onClick={() => toggleSort("name")}>
-                <div className="text-lg flex items-center gap-1">
-                  Coin
-                  <div className="flex flex-col text-[10px] leading-none">
-                    <span className={sortConfig.key === "name" && sortConfig.direction === "asc" ? "text-white" : "text-gray-400"}>
-                      ▲
-                    </span>
-                    <span className={sortConfig.key === "name" && sortConfig.direction === "desc" ? "text-white" : "text-gray-400"}>
-                      ▼
-                    </span>
-                  </div>
-                </div>
-              </th>
-              <th className="w-1/4 p-2 cursor-pointer" onClick={() => toggleSort("price")}>
-                <div className="text-lg flex items-center gap-1">
-                  Price
-                  <div className="flex flex-col text-[10px] leading-none">
-                    <span className={sortConfig.key === "price" && sortConfig.direction === "asc" ? "text-white" : "text-gray-400"}>
-                      ▲
-                    </span>
-                    <span className={sortConfig.key === "price" && sortConfig.direction === "desc" ? "text-white" : "text-gray-400"}>
-                      ▼
-                    </span>
-                  </div>
-                </div>
-              </th>
-              <th className="w-1/4 p-2 text-lg">24h Change</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visibleCoins.length === 0 && (
-              <tr>
-                <td colSpan={3} className="text-center p-4 text-white">
-                  No coins found
-                </td>
-              </tr>
-            )}
-            {visibleCoins.map((coin) => (
-              <tr
-                key={coin.id}
-                className="border-t border-neutral-700 text-white cursor-pointer hover:bg-neutral-800 transition-colors duration-200"
-              >
-                <td className="flex items-center gap-3 p-2">
-                  <Link to={`/cryptocurrencies/${coin.symbol}`} className="flex items-center gap-3">
-                    <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded" />
-                    <div>
-                      <div className="font-bold">{coin.name}</div>
-                      <div className="text-sm text-gray-300">{coin.symbol}</div>
+        <div className="rounded-xl overflow-hidden border border-neutral-800">
+          <table className="min-w-full table-fixed border text-left rounded border-neutral-700 overflow-x-auto text-sm sm:text-base">
+            <thead>
+              <tr className="bg-gradient-to-r from-orange-500 to-orange-800 text-white text-xs sm:text-sm">
+                <th className="w-[140px] p-2 cursor-pointer" onClick={() => toggleSort("name")}>
+                  <div className="text-lg flex items-center gap-1">
+                    Coin
+                    <div className="flex flex-col leading-none">
+                      <ChevronUp size = {12} className={sortConfig.key === "name" && sortConfig.direction === "asc" ? "text-white" : "text-gray-400"}/>
+                      <ChevronDown size = {12} className={sortConfig.key === "name" && sortConfig.direction === "desc" ? "text-white" : "text-gray-400"}/>
                     </div>
-                  </Link>
-                </td>
-                <td className="p-2">${coin.price.toFixed(4)}</td>
-                <td className={`p-2 ${coin.change >= 0 ? "text-green-400" : "text-red-400"}`}>
-                  {coin.change.toFixed(2)}%
-                </td>
+                  </div>
+                </th>
+                <th className="w-[120px] p-2 cursor-pointer" onClick={() => toggleSort("price")}>
+                  <div className="text-lg flex items-center gap-1">
+                    Price
+                    <div className="flex flex-col text-[10px] leading-none">
+                      <ChevronUp size = {12} className={sortConfig.key === "price" && sortConfig.direction === "asc" ? "text-white" : "text-gray-400"}/>
+                      <ChevronDown size = {12} className={sortConfig.key === "price" && sortConfig.direction === "desc" ? "text-white" : "text-gray-400"}/>
+                    </div>
+                  </div>
+                </th>
+                <th className="w-[120px] p-2">24h Change</th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {visibleCoins.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="text-center p-4 text-white">
+                    No coins found
+                  </td>
+                </tr>
+              )}
+              {visibleCoins.map((coin) => (
+                <tr
+                  key={coin.id}
+                  className="border-t border-neutral-700 text-white cursor-pointer hover:bg-neutral-800 transition-colors duration-200"
+                >
+                  <td className="flex items-center gap-3 p-2">
+                    <Link to={`/cryptocurrencies/${coin.symbol}`} className="flex items-center gap-3">
+                      <img src={coin.image} alt={coin.name} className="bg-neutral-800 rounded-2xl w-8 h-8 " />
+                      <div>
+                        <div className="font-bold">{coin.name}</div>
+                        <div className="text-sm text-gray-300">{coin.symbol}</div>
+                      </div>
+                    </Link>
+                  </td>
+                  <td className="p-2">${coin.price.toFixed(4)}</td>
+                  <td className={`p-2 ${coin.change >= 0 ? "text-green-400" : "text-red-400"}`}>
+                    {coin.change.toFixed(2)}%
+                  </td>
+                </tr>
+              ))}
 
-          </tbody>
-        </table>
-
-        <div className="flex justify-center gap-2 mt-4 text-white">
-          <button
-            disabled={page === 0}
-            onClick={() => setPage((p) => p - 1)}
-            className="px-3 py-1 rounded bg-neutral-700 disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span className="px-3 py-1">
-            Page {page + 1} / {totalPages}
-          </span>
-          <button
-            disabled={page + 1 >= totalPages}
-            onClick={() => setPage((p) => p + 1)}
-            className="px-3 py-1 rounded bg-neutral-700 disabled:opacity-50"
-          >
-            Next
-          </button>
+            </tbody>
+          </table>
         </div>
+      <div className="flex justify-center mt-4 gap-2 flex-wrap">
+        <button
+          className="px-3 py-1 rounded hover:bg-neutral-700 disabled:opacity-50"
+          onClick={() => setPage((p) => Math.max(0, p - 1))}
+          disabled={page === 0}
+        >
+          &lt;
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => i)
+          .filter((i) => {
+            if (totalPages <= 7) return true;
+            if (i === 0 || i === totalPages - 1) return true;
+            if (Math.abs(i - page) <= 2) return true;
+            if (page <= 2 && i <= 4) return true;
+            if (page >= totalPages - 3 && i >= totalPages - 5) return true;
+            return false;
+          })
+          .reduce((acc, curr, idx, arr) => {
+            if (idx > 0 && curr - arr[idx - 1] > 1) {
+              acc.push("ellipsis");
+            }
+            acc.push(curr);
+            return acc;
+          }, [])
+          .map((item, idx) =>
+            item === "ellipsis" ? (
+              <span key={`ellipsis-${idx}`} className="px-2 py-1 text-neutral-500">
+                ...
+              </span>
+            ) : (
+              <button
+                key={item}
+                onClick={() => setPage(item)}
+                className={`px-3 py-1 rounded ${
+                  page === item
+                    ? "bg-orange-500 text-white"
+                    : "hover:bg-neutral-700"
+                }`}
+              >
+                {item + 1}
+              </button>
+            )
+          )}
+        <button
+          className="px-3 py-1 rounded hover:bg-neutral-700 disabled:opacity-50"
+          onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+          disabled={page >= totalPages - 1}
+        >
+          &gt;
+        </button>
+      </div>
         <Footer />
       </div>
     </div>

@@ -119,7 +119,7 @@ const PortfolioOverview = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto p-4 text-white">
+    <div className="w-full mx-auto pt-4 text-white">
       {/* {error && (
         <div className="bg-red-800 text-red-200 px-4 py-2 mb-4 rounded">
           {error}

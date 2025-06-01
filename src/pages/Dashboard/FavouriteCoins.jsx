@@ -1,11 +1,11 @@
 import Footer from "../../components/common/Footer.jsx";
 import Sidebar from "../../components/Dashboard/Sidebar.jsx";
 import TopBar from "../../components/Dashboard/TopBar.jsx";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../contexts/authContext/index.jsx";
 import MaintenancePlaceholder from "../../components/common/UnderDevelopment.jsx";
 
-const Settings = () => {
-    const { currentUser } = useAuth();
+const FavouriteCoins = () => {
+    const { userLoggedIn, currentUser } = useAuth();
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -23,4 +23,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default FavouriteCoins;

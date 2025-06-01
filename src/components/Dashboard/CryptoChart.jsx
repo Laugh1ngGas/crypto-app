@@ -117,13 +117,13 @@ const CryptoChart = () => {
 
                   {userLoggedIn && (
                     <div className="flex gap-3">
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
+                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-full hover:bg-neutral-700 transition">
                         Buy
                       </button>
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
+                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-full hover:bg-neutral-700 transition">
                         Receive
                       </button>
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
+                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-full hover:bg-neutral-700 transition">
                         Send
                       </button>
                     </div>
@@ -132,14 +132,16 @@ const CryptoChart = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   <div className="lg:col-span-2 relative">
-                    <div id="tv_chart_container" ref={containerRef} />
-                    <button
-                      onClick={() => setHideToolbar((prev) => !prev)}
-                      className={`absolute z-10 bg-gradient-to-r from-orange-500 to-orange-800 text-white px-0 py-1 rounded shadow-lg
-                        ${hideToolbar ? "bottom-80 left-1" : "bottom-80 left-12 ml-3"}`}
-                    >
-                      {hideToolbar ? ">" : "<"}
-                    </button>
+                    <div className="bg-neutral-800 rounded-xl overflow-hidden" >
+                      <div id="tv_chart_container" ref={containerRef} />
+                        <button
+                          onClick={() => setHideToolbar((prev) => !prev)}
+                          className={`absolute z-10 bg-gradient-to-r from-orange-500 to-orange-800 text-white px-0 py-1 rounded shadow-lg
+                            ${hideToolbar ? "bottom-80 left-1" : "bottom-80 left-12 ml-3"}`}
+                        >
+                          {hideToolbar ? ">" : "<"}
+                        </button>
+                      </div>
                   </div>
 
                   {userLoggedIn && (
@@ -165,7 +167,7 @@ const CryptoChart = () => {
                         className="w-full px-4 py-3 rounded-lg bg-neutral-800 text-white placeholder-gray-400"
                       />
 
-                      <button className="bg-gradient-to-r from-orange-500 to-orange-800 px-4 py-3 rounded-3xl text-white font-semibold hover:opacity-90">
+                      <button className="bg-gradient-to-r from-orange-500 to-orange-800 px-4 py-3 rounded-full text-white font-semibold hover:opacity-90">
                         Swap
                       </button>
                     </div>

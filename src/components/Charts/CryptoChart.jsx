@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import Navbar from "../common/Navbar";
 import { useAuth } from "../../contexts/authContext";
 import Footer from "../common/Footer";
+import { MoveUp, MoveDown, ArrowRightLeft } from "lucide-react";
 
 const CryptoChart = () => {
   const { symbol } = useParams();
@@ -116,32 +117,88 @@ const CryptoChart = () => {
             )}
           </button>
         </div>
+        <div className="bg-neutral-900 p-4 rounded-lg">
+          <div className="flex justify-between items-center flex-wrap md:flex-nowrap">
+            <div className="mb-4 md:mb-0">
+              <div className="text-sm text-gray-400">PRICE / 24H CHANGE</div>
+              <div className="text-xl font-semibold">
+                ${priceData?.price?.toFixed(2) || "Loading..."}{" "}
+                <span className={priceData?.priceChangePercent >= 0 ? "text-green-500" : "text-red-500"}>
+                  {priceData?.priceChangePercent?.toFixed(2) || "0.00"}%
+                </span>
+              </div>
+            </div>
+            {userLoggedIn && (
+              <>
+                <div className="hidden md:flex gap-3 ml-auto">
+                  <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">Send</button>
+                  <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">Receive</button>
+                  <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">Swap</button>
+                </div>
 
-        <div className="flex justify-between items-center bg-neutral-900 p-4 rounded-lg">
-          <div>
-            <div className="text-sm text-gray-400">PRICE / 24H CHANGE</div>
-            <div className="text-xl font-semibold">
-              ${priceData?.price?.toFixed(2) || "Loading..."}{" "}
-              <span className={priceData?.priceChangePercent >= 0 ? "text-green-500" : "text-red-500"}>
-                {priceData?.priceChangePercent?.toFixed(2) || "0.00"}%
-              </span>
+                <div className="flex justify-around md:hidden w-full mt-4">
+                  <div className="flex flex-col items-center">
+                    <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+                      <MoveUp className="text-white" size={18} />
+                    </div>
+                    <span className="text-sm text-white mt-1">Send</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+                      <MoveDown className="text-white" size={18} />
+                    </div>
+                    <span className="text-sm text-white mt-1">Receive</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+                      <ArrowRightLeft className="text-white" size={18} />
+                    </div>
+                    <span className="text-sm text-white mt-1">Swap</span>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+        {userLoggedIn ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2 relative">
+              <div className="bg-neutral-800 rounded-xl overflow-hidden" >
+                <div id="tv_chart_container" ref={containerRef} />
+                  <button
+                    onClick={() => setHideToolbar((prev) => !prev)}
+                    className={`absolute z-10 bg-gradient-to-r from-orange-500 to-orange-800 text-white px-0 py-1 rounded shadow-lg
+                      ${hideToolbar ? "bottom-80 left-1" : "bottom-80 left-12 ml-3"}`}
+                  >
+                    {hideToolbar ? ">" : "<"}
+                  </button>
+                </div>
+            </div>
+            <div className="bg-neutral-900 p-5 rounded-xl flex flex-col gap-4 shadow-xl">
+              <h3 className="text-lg font-semibold text-white">Swap</h3>
+              <div>
+                <label className="text-sm text-gray-400">Sell</label>
+                <div className="flex justify-between items-center bg-neutral-800 px-4 py-3 rounded-lg">
+                  <span>{symbol.toUpperCase()}</span>
+                  <span className="text-gray-400 text-sm">Max: --</span>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm text-gray-400">Buy</label>
+                <div className="bg-neutral-800 px-4 py-3 rounded-lg">USDT</div>
+              </div>
+              <input
+                type="number"
+                placeholder="Enter amount"
+                className="w-full px-4 py-3 rounded-lg bg-neutral-800 text-white placeholder-gray-400"
+              />
+              <button className="bg-gradient-to-r from-orange-500 to-orange-800 px-4 py-3 rounded-full text-white font-semibold hover:opacity-90">
+                Swap
+              </button>
             </div>
           </div>
-
-          {userLoggedIn && (
-            <div className="flex gap-3">
-              <button className="bg-neutral-800 text-white px-4 py-2 rounded hover:bg-neutral-700 transition">
-                Receive
-              </button>
-              <button className="bg-neutral-800 text-white px-4 py-2 rounded hover:bg-neutral-700 transition">
-                Send
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2 relative">
+        ) : (
+          <div className="w-full relative">
             <div id="tv_chart_container" ref={containerRef} />
             <button
               onClick={() => setHideToolbar((prev) => !prev)}
@@ -151,37 +208,7 @@ const CryptoChart = () => {
               {hideToolbar ? ">" : "<"}
             </button>
           </div>
-
-          {userLoggedIn && (
-            <div className="bg-neutral-900 p-5 rounded-xl flex flex-col gap-4 shadow-xl">
-              <h3 className="text-lg font-semibold text-white">Swap</h3>
-
-              <div>
-                <label className="text-sm text-gray-400">Sell</label>
-                <div className="flex justify-between items-center bg-neutral-800 px-4 py-3 rounded-lg">
-                  <span>{symbol.toUpperCase()}</span>
-                  <span className="text-gray-400 text-sm">Max: --</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm text-gray-400">Buy</label>
-                <div className="bg-neutral-800 px-4 py-3 rounded-lg">USDT</div>
-              </div>
-
-              <input
-                type="number"
-                placeholder="Enter amount"
-                className="w-full px-4 py-3 rounded-lg bg-neutral-800 text-white placeholder-gray-400"
-              />
-
-              <button className="bg-gradient-to-r from-orange-500 to-orange-800 px-4 py-3 rounded-lg text-white font-semibold hover:opacity-90">
-                Swap
-              </button>
-            </div>
-          )}
-        </div>
-
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-neutral-900 p-4 rounded">
             <div className="text-sm text-gray-400">FDMC</div>

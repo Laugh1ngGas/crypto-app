@@ -1,129 +1,116 @@
-import React, { useEffect, useState } from "react";
-import { db } from "../../firebase/firebase-config"; // Імпорт Firestore (налаштування мають бути у вас)
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/authContext";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase/firebase-config";
+import axios from "axios";
 
-const PortfolioBalance = ({ user }) => {
+const PortfolioBalance = () => {
+  const { currentUser } = useAuth();
   const [portfolio, setPortfolio] = useState([]);
-  const [balance, setBalance] = useState(0);
-  const [changePercent, setChangePercent] = useState(0);
-  const [changeValue, setChangeValue] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [priceMap, setPriceMap] = useState({});
+  const [changeMap, setChangeMap] = useState({});
+  const [totalValue, setTotalValue] = useState(0);
+  const [totalChange, setTotalChange] = useState(0);
 
+  // 1. Завантаження портфеля з Firestore
   useEffect(() => {
-    if (!user) return;
+    const fetchPortfolio = async () => {
+      if (!currentUser) return;
 
-    // Підписка на портфель користувача у Firestore
-    const q = query(collection(db, "portfolio"), where("userId", "==", user.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const coins = snapshot.docs.map((doc) => doc.data());
-      setPortfolio(coins);
-    });
+      const userPortfolioRef = collection(db, "users", currentUser.uid, "portfolio");
+      const snapshot = await getDocs(userPortfolioRef);
+      const data = snapshot.docs.map((doc) => doc.data());
 
-    return () => unsubscribe();
-  }, [user]);
+      setPortfolio(data);
+    };
 
+    fetchPortfolio();
+  }, [currentUser]);
+
+  // 2. Періодичне оновлення цін через Binance API
   useEffect(() => {
-    if (portfolio.length === 0) {
-      setBalance(0);
-      setChangePercent(0);
-      setChangeValue(0);
-      setLoading(false);
-      return;
-    }
+    if (portfolio.length === 0) return;
 
-    const symbols = portfolio.map((coin) => coin.symbol.toLowerCase());
+    const interval = setInterval(async () => {
+      const symbols = portfolio.map((coin) => `${coin.symbol.toUpperCase()}USDT`);
 
-    // Отримуємо дані з CoinGecko для всіх монет портфеля
-    const fetchCoinData = async () => {
-      setLoading(true);
       try {
-        const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=24h`;
+        const response = await axios.get("https://api.binance.com/api/v3/ticker/24hr");
+        const prices = response.data;
 
-        // Але нам потрібні монети за символом, а CoinGecko приймає id монети, тож зробимо додатковий крок:
-        // Отримаємо всі монети з CoinGecko, щоб побудувати відповідність symbol → id
-        const coinsListResp = await fetch("https://api.coingecko.com/api/v3/coins/list");
-        const coinsList = await coinsListResp.json();
+        const newPriceMap = {};
+        const newChangeMap = {};
 
-        // Map symbol to id (для монет, які є у портфелі)
-        const symbolToIdMap = {};
-        coinsList.forEach((coin) => {
-          if (symbols.includes(coin.symbol.toLowerCase())) {
-            symbolToIdMap[coin.symbol.toLowerCase()] = coin.id;
+        symbols.forEach((symbol) => {
+          const data = prices.find((item) => item.symbol === symbol);
+          if (data) {
+            const sym = symbol.replace("USDT", "");
+            newPriceMap[sym] = parseFloat(data.lastPrice);
+            newChangeMap[sym] = parseFloat(data.priceChangePercent);
           }
         });
 
-        // Формуємо рядок id для запиту (через кому)
-        const ids = Object.values(symbolToIdMap).join(",");
-
-        if (!ids) {
-          // Якщо не знайшли жодної монети — обнуляємо і завершуємо
-          setBalance(0);
-          setChangePercent(0);
-          setChangeValue(0);
-          setLoading(false);
-          return;
-        }
-
-        // Отримуємо ринкові дані по id монет
-        const marketResp = await fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&price_change_percentage=24h`
-        );
-        const marketData = await marketResp.json();
-
-        // Порахувати загальний баланс і зміну
-        let totalBalance = 0;
-        let totalPrevBalance = 0;
-
-        portfolio.forEach(({ symbol, amount }) => {
-          const id = symbolToIdMap[symbol.toLowerCase()];
-          if (!id) return;
-          const coinMarket = marketData.find((c) => c.id === id);
-          if (!coinMarket) return;
-
-          const priceNow = coinMarket.current_price || 0;
-          const changePct24h = coinMarket.price_change_percentage_24h || 0;
-
-          const amountNum = Number(amount) || 0;
-
-          totalBalance += priceNow * amountNum;
-          // Щоб знайти баланс 24 години тому: 
-          // price_24h_ago = priceNow / (1 + changePct24h/100)
-          const price24hAgo = priceNow / (1 + changePct24h / 100);
-          totalPrevBalance += price24hAgo * amountNum;
-        });
-
-        const diffValue = totalBalance - totalPrevBalance;
-        const diffPercent = totalPrevBalance ? (diffValue / totalPrevBalance) * 100 : 0;
-
-        setBalance(totalBalance);
-        setChangeValue(diffValue);
-        setChangePercent(diffPercent);
-      } catch (error) {
-        console.error("Error fetching coin data:", error);
-        setBalance(0);
-        setChangePercent(0);
-        setChangeValue(0);
-      } finally {
-        setLoading(false);
+        setPriceMap(newPriceMap);
+        setChangeMap(newChangeMap);
+      } catch (err) {
+        console.error("Failed to fetch prices:", err);
       }
-    };
+    }, 3000);
 
-    fetchCoinData();
+    return () => clearInterval(interval);
   }, [portfolio]);
 
-  if (loading) return <div>Loading balance...</div>;
+  // 3. Розрахунок загальної вартості та зміни
+  useEffect(() => {
+    if (portfolio.length === 0 || Object.keys(priceMap).length === 0) return;
+
+    let total = 0;
+    let weightedChangeSum = 0;
+
+    portfolio.forEach((coin) => {
+      const symbol = coin.symbol.toUpperCase();
+      const amount = parseFloat(coin.amount);
+      const price = priceMap[symbol] || 0;
+      const changePercent = changeMap[symbol] || 0;
+
+      const value = amount * price;
+      total += value;
+
+      weightedChangeSum += value * changePercent;
+    });
+
+    setTotalValue(total);
+    setTotalChange(weightedChangeSum / total || 0);
+  }, [priceMap, changeMap, portfolio]);
 
   return (
-    <div className="p-4 bg-gray-900 rounded text-white max-w-sm mx-auto">
-      <h2 className="text-xl font-semibold mb-2">Portfolio Balance</h2>
-      <div className="text-3xl font-bold">${balance.toFixed(2)}</div>
-      <div
-        className={`mt-1 text-lg ${
-          changePercent > 0 ? "text-green-500" : changePercent < 0 ? "text-red-500" : "text-neutral-400"
-        }`}
-      >
-        {changePercent >= 0 ? "+" : ""}
-        {changePercent.toFixed(2)}% (${changeValue.toFixed(2)})
+    <div className="bg-neutral-900 rounded-2xl p-6 flex items-center justify-between text-white">
+      <div>
+        <div className="text-xs text-neutral-400 font-medium uppercase tracking-widest mb-1">
+          Total Value
+        </div>
+        <div className="flex items-end space-x-2">
+          <div className="text-3xl font-semibold">${totalValue.toFixed(2)}</div>
+          <div
+            className={`text-sm font-medium ${
+              totalChange >= 0 ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {totalChange.toFixed(2)}%
+          </div>
+        </div>
+      </div>
+
+      <div className="flex space-x-3">
+        <button className="bg-neutral-800 hover:bg-gradient-to-r hover:from-neutral-700 hover:to-neutral-800 text-white font-semibold w-28 h-12 rounded-full text-sm">
+          Send
+        </button>
+        <button className="bg-neutral-800 hover:bg-gradient-to-r hover:from-neutral-700 hover:to-neutral-800 text-white font-semibold w-28 h-12 rounded-full text-sm">
+          Receive
+        </button>
+        <button className="bg-gradient-to-r from-orange-500 to-orange-800 hover:bg-gradient-to-r hover:from-orange-600 hover:to-orange-900 text-white font-semibold w-28 h-12 rounded-full text-sm">
+          Swap
+        </button>
       </div>
     </div>
   );

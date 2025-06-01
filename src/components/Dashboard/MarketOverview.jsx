@@ -6,7 +6,7 @@ import { Search, ChevronUp, ChevronDown } from "lucide-react";
 const COINGECKO_MARKETS_URL = "https://api.coingecko.com/api/v3/coins/markets";
 const BINANCE_INFO_URL = "https://api.binance.com/api/v3/exchangeInfo";
 const BINANCE_WS_URL = "wss://stream.binance.com:9443/ws/!ticker@arr";
-const ITEMS_PER_PAGE = 13;
+const ITEMS_PER_PAGE = 10;
 
 const MarketOverview = () => {
   const [allSymbols, setAllSymbols] = useState([]);
@@ -182,21 +182,22 @@ const MarketOverview = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-4 text-white">
-      <div className="mb-4 flex justify-between items-center">
-        <div className="relative">
-          <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-neutral-500" />
-          <input
-            type="text"
-            placeholder="Search coin..."
-            className="pl-9 pr-4 py-2 rounded-md bg-neutral-800 text-sm text-white placeholder-neutral-500"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setPage(0);
-            }}
-          />
-        </div>
-      </div>
+<div className="mb-4">
+  <div className="relative w-full">
+    <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-neutral-500" />
+    <input
+      type="text"
+      placeholder="Search coin..."
+      className="w-full outline-none pl-9 pr-4 py-2 rounded-md bg-neutral-800 text-sm text-white placeholder-neutral-500"
+      value={searchTerm}
+      onChange={(e) => {
+        setSearchTerm(e.target.value);
+        setPage(0);
+      }}
+    />
+  </div>
+</div>
+
 
       <div className="rounded-xl overflow-hidden border border-neutral-800">
         <table className="w-full table-fixed text-sm">

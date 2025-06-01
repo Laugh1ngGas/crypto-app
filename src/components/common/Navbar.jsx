@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";  // <-- імпорт useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
 import logo from "../../assets/logo.png";
 import { navItems } from "../../constants";
@@ -13,7 +13,7 @@ const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(null);
 
   const { userLoggedIn, currentUser } = useAuth();
-  const navigate = useNavigate(); // <-- ініціалізуємо useNavigate
+  const navigate = useNavigate();
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
@@ -24,11 +24,9 @@ const Navbar = () => {
     setOpenMenu(openMenu === label ? null : label);
   };
 
-  // Функція для виходу з акаунта з редиректом
   const handleSignOut = () => {
     doSignOut()
       .then(() => {
-        // Після виходу робимо редирект на лендінг
         navigate("/");
       })
       .catch((error) => {

@@ -9,7 +9,7 @@ import Loader from "./components/common/LoadingScreen.jsx";
 import Cryptocurrencies from "./pages/Cryptocurrencies/Cryptocurrencies.jsx";
 import Portfolio from "./pages/Dashboard/Portfolio.jsx";
 import DashboardCryptocurrencies from "./pages/Dashboard/Cryptocurrencies.jsx";
-import VirtualPortfolio from "./pages/Dashboard/VirtualPortfolio.jsx";
+import FavouriteCoins from "./pages/Dashboard/FavouriteCoins.jsx";
 import Settings from "./pages/Dashboard/Settings.jsx";
 import DashboardCryptoCharts from "./components/Dashboard/CryptoChart.jsx";
 import Trade from "./pages/Dashboard/Trade.jsx";
@@ -40,7 +40,7 @@ const AppRoutes = () => {
       <Route path="/dashboard/portfolio" element={<Portfolio />} />
       <Route path="/dashboard/cryptocurrencies" element={<DashboardCryptocurrencies />} />
       <Route path="/dashboard/cryptocurrencies/:symbol" element={<DashboardCryptoCharts />} />
-      <Route path="/dashboard/virtualportfolio" element={<VirtualPortfolio />} />
+      <Route path="/dashboard/favourite" element={<FavouriteCoins />} />
       <Route path="/dashboard/settings" element={<Settings />} />
       <Route path="/dashboard/trade" element={<Trade />} />
 
