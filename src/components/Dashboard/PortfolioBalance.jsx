@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/authContext";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
 import axios from "axios";
+import { MoveUp, MoveDown, ArrowRightLeft } from "lucide-react";
 
 const PortfolioBalance = () => {
   const { currentUser } = useAuth();
@@ -12,7 +13,6 @@ const PortfolioBalance = () => {
   const [totalValue, setTotalValue] = useState(0);
   const [totalChange, setTotalChange] = useState(0);
 
-  // 1. Завантаження портфеля з Firestore
   useEffect(() => {
     const fetchPortfolio = async () => {
       if (!currentUser) return;
@@ -27,7 +27,6 @@ const PortfolioBalance = () => {
     fetchPortfolio();
   }, [currentUser]);
 
-  // 2. Періодичне оновлення цін через Binance API
   useEffect(() => {
     if (portfolio.length === 0) return;
 
@@ -60,7 +59,6 @@ const PortfolioBalance = () => {
     return () => clearInterval(interval);
   }, [portfolio]);
 
-  // 3. Розрахунок загальної вартості та зміни
   useEffect(() => {
     if (portfolio.length === 0 || Object.keys(priceMap).length === 0) return;
 
@@ -83,34 +81,63 @@ const PortfolioBalance = () => {
     setTotalChange(weightedChangeSum / total || 0);
   }, [priceMap, changeMap, portfolio]);
 
+  if (!currentUser) {
+    return null; // або можна показати щось типу "Please log in"
+  }
+
   return (
-    <div className="bg-neutral-900 rounded-2xl p-6 flex items-center justify-between text-white">
-      <div>
-        <div className="text-xs text-neutral-400 font-medium uppercase tracking-widest mb-1">
-          Total Value
-        </div>
-        <div className="flex items-end space-x-2">
-          <div className="text-3xl font-semibold">${totalValue.toFixed(2)}</div>
-          <div
-            className={`text-sm font-medium ${
-              totalChange >= 0 ? "text-green-500" : "text-red-500"
-            }`}
-          >
-            {totalChange.toFixed(2)}%
+    <div className="bg-neutral-900 rounded-2xl p-6 text-white">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="mb-4 md:mb-0">
+          <div className="text-xs text-neutral-400 font-medium uppercase tracking-widest mb-1">
+            Total Value
           </div>
+          <div className="flex items-end space-x-2">
+            <div className="text-3xl font-semibold">${totalValue.toFixed(2)}</div>
+            <div
+              className={`text-sm font-medium ${
+                totalChange >= 0 ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {totalChange.toFixed(2)}%
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop buttons */}
+        <div className="hidden md:flex gap-3">
+          <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
+            Send
+          </button>
+          <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
+            Receive
+          </button>
+          <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
+            Swap
+          </button>
         </div>
       </div>
 
-      <div className="flex space-x-3">
-        <button className="bg-neutral-800 hover:bg-gradient-to-r hover:from-neutral-700 hover:to-neutral-800 text-white font-semibold w-28 h-12 rounded-full text-sm">
-          Send
-        </button>
-        <button className="bg-neutral-800 hover:bg-gradient-to-r hover:from-neutral-700 hover:to-neutral-800 text-white font-semibold w-28 h-12 rounded-full text-sm">
-          Receive
-        </button>
-        <button className="bg-gradient-to-r from-orange-500 to-orange-800 hover:bg-gradient-to-r hover:from-orange-600 hover:to-orange-900 text-white font-semibold w-28 h-12 rounded-full text-sm">
-          Swap
-        </button>
+      {/* Mobile buttons */}
+      <div className="flex justify-around md:hidden w-full mt-6">
+        <div className="flex flex-col items-center cursor-pointer">
+          <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+            <MoveUp className="text-white" size={18} />
+          </div>
+          <span className="text-sm text-white mt-1">Send</span>
+        </div>
+        <div className="flex flex-col items-center cursor-pointer">
+          <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+            <MoveDown className="text-white" size={18} />
+          </div>
+          <span className="text-sm text-white mt-1">Receive</span>
+        </div>
+        <div className="flex flex-col items-center cursor-pointer">
+          <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+            <ArrowRightLeft className="text-white" size={18} />
+          </div>
+          <span className="text-sm text-white mt-1">Swap</span>
+        </div>
       </div>
     </div>
   );
