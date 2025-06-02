@@ -17,7 +17,7 @@ const TopBar = ({ user, onBurgerClick }) => {
 
   const isCoinPage = matchPath("/dashboard/cryptocurrencies/:symbol", location.pathname);
 
-  const currentTitle = menuTitles[location.pathname] || "Crypto App";
+  const currentTitle = menuTitles[location.pathname];
 
   const [isMobile, setIsMobile] = useState(false);
 

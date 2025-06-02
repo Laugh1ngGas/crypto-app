@@ -94,8 +94,9 @@ const Cryptocurrencies = () => {
           const coin = flatData.find((c) => c.id === pair.id);
           return {
             id: pair.id,
-            symbol: pair.baseSymbol + "USD",
-            name: binanceNames[pair.baseSymbol] || pair.baseSymbol,
+            symbol: pair.baseSymbol,
+            displaySymbol: pair.baseSymbol + "USD",
+            name: coin?.name || pair.baseSymbol,
             image: coin?.image || "",
             price: 0,
             change: 0,
@@ -229,7 +230,7 @@ const Cryptocurrencies = () => {
               {visibleCoins.length === 0 && (
                 <tr>
                   <td colSpan={3} className="text-center p-4 text-white">
-                    No coins found
+                    Loading coins...
                   </td>
                 </tr>
               )}

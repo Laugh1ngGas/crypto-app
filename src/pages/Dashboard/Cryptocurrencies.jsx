@@ -6,8 +6,7 @@ import { useAuth } from "../../contexts/authContext";
 import MarketOverview from "../../components/Dashboard/MarketOverview.jsx";
 
 const DashboardCryptocurrencies = () => {
-  const { userLoggedIn, currentUser } = useAuth();
-
+  const { currentUser } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => {
     setMobileMenuOpen((prev) => !prev);
@@ -16,11 +15,12 @@ const DashboardCryptocurrencies = () => {
   return (
     <div className="max-w-6xl mx-auto p-4">
       <div className="flex gap-4">
-        <Sidebar mobileOpen={mobileMenuOpen} setMobileOpen={setMobileMenuOpen} />
-
+        <Sidebar 
+          mobileOpen={mobileMenuOpen} 
+          onCloseMobile={() => setMobileMenuOpen(false)} 
+        />
         <div className="flex flex-col flex-1">
           <TopBar user={currentUser} onBurgerClick={toggleMobileMenu} />
-
           <div className="flex-1 overflow-y-auto">
             <MarketOverview />
           </div>

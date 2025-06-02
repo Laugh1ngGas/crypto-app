@@ -14,35 +14,37 @@ import {
 
 const Sidebar = ({ mobileOpen, onCloseMobile }) => {
   const location = useLocation();
-  const [isMobile, setIsMobile] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [collapsed, setCollapsed] = useState(() => {
+    const saved = localStorage.getItem("sidebarCollapsed");
+    return saved !== null ? JSON.parse(saved) : false;
+  });
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    if (isMobile) {
-      setCollapsed(true);
+    if (!isMobile) {
+      const saved = localStorage.getItem("sidebarCollapsed");
+      if (saved !== null) setCollapsed(JSON.parse(saved));
     } else {
-      const savedState = localStorage.getItem("sidebarCollapsed");
-      setCollapsed(savedState ? JSON.parse(savedState) : false);
+      setCollapsed(true);
     }
   }, [isMobile]);
 
-  useEffect(() => {
-    if (!isMobile) {
-      localStorage.setItem("sidebarCollapsed", JSON.stringify(collapsed));
-    }
-  }, [collapsed, isMobile]);
-  
-
   const toggleSidebar = () => {
-    if (!isMobile) setCollapsed(!collapsed);
+    if (!isMobile) {
+      const newState = !collapsed;
+      setCollapsed(newState);
+      localStorage.setItem("sidebarCollapsed", JSON.stringify(newState));
+    }
   };
 
   const isActive = (path) => location.pathname === path;
@@ -57,17 +59,16 @@ const Sidebar = ({ mobileOpen, onCloseMobile }) => {
         : "hover:text-orange-500 text-white"
     }`;
 
-const sidebarContent = (
-  <div
-    className={`relative text-white rounded-2xl shadow-lg p-4 flex flex-col justify-between transition-all duration-300 ${
-      isMobile
-        ? "w-64 h-[100vh] bg-neutral-900"
-        : collapsed
-        ? "w-20 h-[80vh] bg-neutral-900"
-        : "w-64 h-[80vh] bg-neutral-900"
-    } flex-shrink-0`}
-  >
-
+  const sidebarContent = (
+    <div
+      className={`relative text-white rounded-2xl shadow-lg p-4 flex flex-col justify-between transition-all duration-300 ${
+        isMobile
+          ? "w-64 h-[100vh] bg-neutral-900"
+          : collapsed
+          ? "w-20 h-[80vh] bg-neutral-900"
+          : "w-64 h-[80vh] bg-neutral-900"
+      } flex-shrink-0`}
+    >
       <div className="w-full">
         {isMobile ? (
           <div className="flex justify-end items-center mb-6">
@@ -132,13 +133,18 @@ const sidebarContent = (
 
   return (
     <>
-      {isMobile && (
+      {isMobile ? (
         <>
           <div
             className={`fixed inset-0 z-40 transition-opacity duration-300 ${
               mobileOpen ? "bg-black/50" : "bg-transparent pointer-events-none"
             }`}
-            onClick={onCloseMobile}
+            // onClick={onCloseMobile}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                onCloseMobile();
+              }
+            }}
           />
           <div
             className={`fixed top-0 left-0 h-full z-50 transform transition-transform duration-300 ease-in-out ${
@@ -148,9 +154,7 @@ const sidebarContent = (
             {sidebarContent}
           </div>
         </>
-      )}
-
-      {!isMobile && (
+      ) : (
         <div
           className="relative"
           onMouseEnter={() => setIsHovered(true)}

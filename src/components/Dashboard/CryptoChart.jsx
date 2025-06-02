@@ -5,19 +5,25 @@ import { useAuth } from "../../contexts/authContext";
 import Footer from "../common/Footer";
 import Sidebar from "../../components/Dashboard/Sidebar.jsx";
 import TopBar from "../../components/Dashboard/TopBar.jsx";
+import { MoveUp, MoveDown, ArrowRightLeft } from "lucide-react";
 
 const CryptoChart = () => {
   const { symbol } = useParams();
   const containerRef = useRef(null);
   const { userLoggedIn, currentUser } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [hideToolbar, setHideToolbar] = useState(false);
   const [priceData, setPriceData] = useState(null);
   const [fdmc, setFdmc] = useState(null);
-  const [setCoinDetails] = useState(null);
+  const [coinDetails, setCoinDetails] = useState(null);
 
   const latestDataRef = useRef(null);
   const throttleTimeout = useRef(null);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -98,37 +104,58 @@ const CryptoChart = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-      <div className="flex h-screen gap-4">
-        <Sidebar />
+      <div className="flex gap-4">
+        <Sidebar 
+          mobileOpen={mobileMenuOpen} 
+          onCloseMobile={() => setMobileMenuOpen(false)} 
+        />
         <div className="flex flex-col flex-1">
-          <TopBar user={currentUser} />
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="max-w-7xl mx-auto p-4 space-y-6 text-white">
-                <div className="flex justify-between items-center bg-neutral-900 p-4 rounded-2xl">
-                  <div>
-                    <div className="text-sm text-gray-400">PRICE / 24H CHANGE</div>
-                    <div className="text-xl font-semibold">
-                      ${priceData?.price?.toFixed(2) || "Loading..."}{" "}
-                      <span className={priceData?.priceChangePercent >= 0 ? "text-green-500" : "text-red-500"}>
-                        {priceData?.priceChangePercent?.toFixed(2) || "0.00"}%
-                      </span>
-                    </div>
-                  </div>
-
-                  {userLoggedIn && (
-                    <div className="flex gap-3">
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-full hover:bg-neutral-700 transition">
-                        Buy
-                      </button>
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-full hover:bg-neutral-700 transition">
-                        Receive
-                      </button>
-                      <button className="bg-neutral-800 text-white w-28 h-12 rounded-full hover:bg-neutral-700 transition">
-                        Send
-                      </button>
-                    </div>
-                  )}
+          <TopBar user={currentUser} onBurgerClick={toggleMobileMenu} coinDetails={coinDetails} />
+          <div className="flex-1 overflow-y-auto pt-4">
+            <div className="max-w-7xl mx-auto space-y-4 text-white">
+<div className="bg-neutral-900 p-4 rounded-lg">
+          <div className="flex justify-between items-center flex-wrap md:flex-nowrap">
+            <div className="mb-4 md:mb-0">
+              <div className="text-sm text-gray-400">PRICE / 24H CHANGE</div>
+              <div className="text-xl font-semibold">
+                ${priceData?.price?.toFixed(2) || "Loading..."}{" "}
+                <span className={priceData?.priceChangePercent >= 0 ? "text-green-500" : "text-red-500"}>
+                  {priceData?.priceChangePercent?.toFixed(2) || "0.00"}%
+                </span>
+              </div>
+            </div>
+            {userLoggedIn && (
+              <>
+                <div className="hidden md:flex gap-3 ml-auto">
+                  <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">Send</button>
+                  <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">Receive</button>
+                  <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">Swap</button>
                 </div>
+
+                <div className="flex justify-around md:hidden w-full mt-4">
+                  <div className="flex flex-col items-center">
+                    <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+                      <MoveUp className="text-white" size={18} />
+                    </div>
+                    <span className="text-sm text-white mt-1">Send</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+                      <MoveDown className="text-white" size={18} />
+                    </div>
+                    <span className="text-sm text-white mt-1">Receive</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">
+                      <ArrowRightLeft className="text-white" size={18} />
+                    </div>
+                    <span className="text-sm text-white mt-1">Swap</span>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   <div className="lg:col-span-2 relative">
