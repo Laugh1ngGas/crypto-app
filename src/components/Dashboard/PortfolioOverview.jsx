@@ -133,13 +133,12 @@ const PortfolioOverview = () => {
   );
 
   return (
-    <div className="w-full mx-auto pt-4 text-white">
-      {error && (
+    <div className="w-full mx-auto pt-4 text-white">       
+      {/* {error && (
         <div className="bg-red-800 text-red-200 px-4 py-2 mb-4 rounded">
           {error}
         </div>
-      )}
-
+      )} */}
       <div className="hidden md:block rounded-xl overflow-hidden border border-neutral-800">
         <div className="overflow-x-auto">
           <table className="w-full table-fixed text-sm min-w-[600px]">
@@ -216,7 +215,6 @@ const PortfolioOverview = () => {
         </div>
       </div>
 
-      {/* Mobile cards */}
       <div className="md:hidden space-y-4">
         {paginatedData.length === 0 ? (
           <div className="text-center py-6 text-neutral-400">Loading portfolio...</div>
@@ -273,7 +271,6 @@ const PortfolioOverview = () => {
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-4 gap-2 flex-wrap">
           <button

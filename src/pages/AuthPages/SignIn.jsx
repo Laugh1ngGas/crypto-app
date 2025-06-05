@@ -22,7 +22,7 @@ const SignIn = () => {
     setError("");
     setLoading(true);
 
-    const validationError = validateSignIn(email, password);
+    const validationError = validateSignIn(email);
     if (validationError) {
       setError(validationError);
       setLoading(false);
@@ -45,9 +45,17 @@ const SignIn = () => {
       }, 3000);
     } catch (err) {
       setLoading(false);
-      setError(err.message);
+
+      if (err.code === "auth/invalid-credential") {
+        setError("Invalid email or password.");
+      } else if (err.code === "auth/user-disabled") {
+        setError("Your account has been disabled.");
+      } else {
+        setError("Sign-in failed. Please try again.");
+      }
     }
   };
+
 
   const handleGoogleSignIn = async () => {
     setError("");

@@ -1,7 +1,7 @@
 import Footer from "../../components/common/Footer.jsx";
 import Sidebar from "../../components/Dashboard/Sidebar.jsx";
 import TopBar from "../../components/Dashboard/TopBar.jsx";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import { useParams } from "react-router-dom";
 import CryptoChart from "../../components/Dashboard/CryptoChart/CryptoChart.jsx";
 

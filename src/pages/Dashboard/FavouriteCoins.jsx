@@ -1,7 +1,7 @@
 import Footer from "../../components/common/Footer.jsx";
 import Sidebar from "../../components/Dashboard/Sidebar.jsx";
 import TopBar from "../../components/Dashboard/TopBar.jsx";
-import { useAuth } from "../../contexts/authContext/index.jsx";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import MaintenancePlaceholder from "../../components/common/UnderDevelopment.jsx";
 import { useState } from "react";
 

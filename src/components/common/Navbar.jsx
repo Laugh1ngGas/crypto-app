@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
 import logo from "../../assets/logo.png";
 import { navItems } from "../../constants";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import { doSignOut } from "../../firebase/auth";
 import SignInSignUpToggle from "../Auth/SignButtonAnimation";
 import UserWalletInfo from "./UserWalletInfo";
@@ -78,7 +78,6 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-
           <div className="hidden lg:flex justify-center space-x-8 items-center">
             {userLoggedIn ? (
               <UserWalletInfo user={currentUser} />
@@ -86,14 +85,12 @@ const Navbar = () => {
               <SignInSignUpToggle />
             )}
           </div>
-
           <div className="lg:hidden flex">
             <button onClick={toggleNavbar}>
               {mobileDrawerOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </div>
-
         {mobileDrawerOpen && (
           <div className="lg:hidden flex flex-col bg-neutral-900 p-6 rounded-md space-y-4 z-50">
             {userLoggedIn && (

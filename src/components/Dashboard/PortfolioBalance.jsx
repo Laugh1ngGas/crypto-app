@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
 import axios from "axios";
@@ -82,7 +82,7 @@ const PortfolioBalance = () => {
   }, [priceMap, changeMap, portfolio]);
 
   if (!currentUser) {
-    return null; // або можна показати щось типу "Please log in"
+    return null;
   }
 
   return (
@@ -103,8 +103,6 @@ const PortfolioBalance = () => {
             </div>
           </div>
         </div>
-
-        {/* Desktop buttons */}
         <div className="hidden md:flex gap-3">
           <button className="bg-neutral-800 text-white w-28 h-12 rounded-3xl hover:bg-neutral-700 transition">
             Send
@@ -117,8 +115,6 @@ const PortfolioBalance = () => {
           </button>
         </div>
       </div>
-
-      {/* Mobile buttons */}
       <div className="flex justify-around md:hidden w-full mt-6">
         <div className="flex flex-col items-center cursor-pointer">
           <div className="bg-neutral-800 p-3 rounded-full hover:bg-neutral-700 transition">

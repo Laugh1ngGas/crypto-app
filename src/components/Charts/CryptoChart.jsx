@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import Navbar from "../common/Navbar";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import Footer from "../common/Footer";
 import { MoveUp, MoveDown, ArrowRightLeft } from "lucide-react";
 
@@ -12,7 +12,6 @@ const CryptoChart = () => {
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const { userLoggedIn } = useAuth();
-  const [page, setPage] = useState(0);
 
   const [hideToolbar, setHideToolbar] = useState(false);
   const [priceData, setPriceData] = useState(null);

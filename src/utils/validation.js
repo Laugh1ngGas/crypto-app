@@ -5,7 +5,7 @@ export const validateEmail = (email) => {
   return null;
 };
 
-export const validatePassword = (password) => {
+export const validatePassword = (password, checkSpecial = false) => {
   if (!password) return "Password is required.";
   if (password.length < 6) return "Password must be at least 6 characters.";
   if (!/[A-Z]/.test(password))
@@ -13,6 +13,8 @@ export const validatePassword = (password) => {
   if (!/[a-z]/.test(password))
     return "Password must contain a lowercase letter.";
   if (!/[0-9]/.test(password)) return "Password must contain a number.";
+  if (checkSpecial && !/[^A-Za-z0-9]/.test(password))
+    return "Password must contain a special character.";
   return null;
 };
 
@@ -26,7 +28,7 @@ export const validateSignUp = (nickname, email, password) => {
   return (
     validateNickname(nickname) ||
     validateEmail(email) ||
-    validatePassword(password)
+    validatePassword(password, true)
   );
 };
 

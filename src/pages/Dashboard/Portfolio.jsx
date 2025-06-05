@@ -1,7 +1,7 @@
 import Footer from "../../components/common/Footer.jsx";
 import Sidebar from "../../components/Dashboard/Sidebar.jsx";
 import TopBar from "../../components/Dashboard/TopBar.jsx";
-import { useAuth } from "../../contexts/authContext";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import PortfolioOverview from "../../components/Dashboard/PortfolioOverview.jsx";
 import PortfolioBalance from "../../components/Dashboard/PortfolioBalance.jsx";
 import { useState } from "react";
