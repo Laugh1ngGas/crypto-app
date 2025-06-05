@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom"; 
 import { doSignOut } from "../../firebase/auth";
+import ThemeToggle from "./ThemeToggle";
 
 const shortenAddress = (address) => {
   if (!address) return "";
@@ -50,6 +51,9 @@ const UserWalletInfo = ({ user }) => {
 
   return (
     <div className="flex items-center gap-2">
+      <div>
+        <ThemeToggle />
+      </div>
       <div className="group cursor-pointer w-12 h-12 rounded-full bg-neutral-800 hover:bg-neutral-700 flex items-center justify-center">
         <Link to="/dashboard/settings">
           <SettingsIcon className="w-5 h-5 text-neutral-400 group-hover:text-white" />

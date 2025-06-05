@@ -7,6 +7,7 @@ import { useAuth } from "../../contexts/AuthContext.jsx";
 import { doSignOut } from "../../firebase/auth";
 import SignInSignUpToggle from "../Auth/SignButtonAnimation";
 import UserWalletInfo from "./UserWalletInfo";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -82,7 +83,10 @@ const Navbar = () => {
             {userLoggedIn ? (
               <UserWalletInfo user={currentUser} />
             ) : (
-              <SignInSignUpToggle />
+              <>
+                <ThemeToggle theme="light" onToggle={() => {}} />
+                <SignInSignUpToggle />
+              </>
             )}
           </div>
           <div className="lg:hidden flex">
