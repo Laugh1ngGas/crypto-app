@@ -26,7 +26,10 @@ const PortfolioOverview = () => {
 
       try {
         const snapshot = await getDocs(collection(db, "users", user.uid, "portfolio"));
-        const coins = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const coins = snapshot.docs
+          .filter((doc) => doc.id !== "_placeholder")
+          .map((doc) => ({ id: doc.id, ...doc.data() }));
+
         setPortfolio(coins);
         setPage(0);
       } catch (err) {
@@ -39,34 +42,52 @@ const PortfolioOverview = () => {
   }, [user]);
 
   useEffect(() => {
-    const fetchIcons = async () => {
-      if (portfolio.length === 0) {
-        setCoinData([]);
-        return;
-      }
+    if (portfolio.length === 0) {
+      setCoinData([]);
+      return;
+    }
 
+    const fetchIcons = async () => {
       try {
         const listRes = await axios.get(COINGECKO_API);
         const idMap = {};
         listRes.data.forEach((coin) => {
-          idMap[coin.symbol.toUpperCase()] = coin.id;
+          if (coin.symbol) {
+            idMap[coin.symbol.toUpperCase()] = coin.id;
+          }
         });
 
         const ids = portfolio
-          .map((coin) => idMap[coin.symbol.toUpperCase()])
+          .map((coin) => {
+            if (!coin.symbol) return null;
+            return idMap[coin.symbol.toUpperCase()] || null;
+          })
           .filter(Boolean)
           .join(",");
+
+        if (!ids) {
+          setCoinData(
+            portfolio.map((item) => ({
+              ...item,
+              name: item.symbol || "Unknown",
+              image: "",
+              price: 0,
+              change: 0,
+            }))
+          );
+          return;
+        }
 
         const marketRes = await axios.get(COINGECKO_MARKETS, {
           params: { vs_currency: "usd", ids },
         });
 
         const merged = portfolio.map((item) => {
-          const cgId = idMap[item.symbol.toUpperCase()];
+          const cgId = idMap[item.symbol?.toUpperCase()];
           const info = marketRes.data.find((c) => c.id === cgId);
           return {
             ...item,
-            name: info?.name || item.symbol,
+            name: info?.name || item.symbol || "Unknown",
             image: info?.image || "",
             price: 0,
             change: 0,
@@ -84,13 +105,15 @@ const PortfolioOverview = () => {
   }, [portfolio]);
 
   useEffect(() => {
+    if (portfolio.length === 0) return;
+
     const ws = new WebSocket(BINANCE_WS_URL);
 
     ws.onmessage = (event) => {
       try {
         const updates = JSON.parse(event.data);
         updates.forEach((u) => {
-          if (u.s.endsWith("USDT")) {
+          if (typeof u.s === "string" && u.s.endsWith("USDT")) {
             const symbol = u.s.replace("USDT", "");
             pricesRef.current[symbol] = {
               price: parseFloat(u.c),
@@ -109,12 +132,14 @@ const PortfolioOverview = () => {
     };
 
     return () => ws.close();
-  }, []);
+  }, [portfolio]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCoinData((prev) =>
         prev.map((coin) => {
+          if (!coin.symbol) return coin;
+
           const update = pricesRef.current[coin.symbol.toUpperCase()];
           return update
             ? { ...coin, price: update.price, change: update.change }
@@ -133,11 +158,9 @@ const PortfolioOverview = () => {
   );
 
   return (
-    <div className="w-full mx-auto pt-4 text-white">       
+    <div className="w-full mx-auto pt-4 text-white">
       {/* {error && (
-        <div className="bg-red-800 text-red-200 px-4 py-2 mb-4 rounded">
-          {error}
-        </div>
+        <div className="bg-red-800 text-red-200 px-4 py-2 mb-4 rounded">{error}</div>
       )} */}
       <div className="hidden md:block rounded-xl overflow-hidden border border-neutral-800">
         <div className="overflow-x-auto">
@@ -150,7 +173,13 @@ const PortfolioOverview = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedData.length === 0 ? (
+              {portfolio.length === 0 ? (
+                <tr>
+                  <td colSpan="3" className="text-center py-6 text-neutral-400">
+                    Your portfolio is empty. Add a cryptocurrency to track your balance.
+                  </td>
+                </tr>
+              ) : paginatedData.length === 0 ? (
                 <tr>
                   <td colSpan="3" className="text-center py-6 text-neutral-400">
                     Loading portfolio...
@@ -159,30 +188,30 @@ const PortfolioOverview = () => {
               ) : (
                 paginatedData.map((coin) => (
                   <tr
-                    key={coin.symbol}
+                    key={coin.symbol || coin.id}
                     className="border-t border-neutral-800 hover:bg-neutral-900 transition cursor-pointer"
                   >
                     <td className="px-4 py-4">
                       <Link
-                        to={`/dashboard/cryptocurrencies/${coin.symbol.toUpperCase()}`}
+                        to={`/dashboard/cryptocurrencies/${(coin.symbol || "").toUpperCase()}`}
                         className="flex items-center gap-3 overflow-hidden text-white"
                       >
                         <img
-                          src={coin.image}
-                          alt={coin.name}
+                          src={coin.image || ""}
+                          alt={coin.name || ""}
                           className="w-8 h-8 rounded-full flex-shrink-0"
                         />
                         <div className="truncate">
-                          <div className="font-medium truncate">{coin.name}</div>
+                          <div className="font-medium truncate">{coin.name || coin.symbol}</div>
                           <div className="text-xs text-neutral-400 uppercase truncate">
-                            {coin.symbol.toUpperCase()}
+                            {(coin.symbol || "").toUpperCase()}
                           </div>
                         </div>
                       </Link>
                     </td>
                     <td className="px-4 py-4">
                       <Link
-                        to={`/dashboard/cryptocurrencies/${coin.symbol.toUpperCase()}`}
+                        to={`/dashboard/cryptocurrencies/${(coin.symbol || "").toUpperCase()}`}
                         className="text-white"
                       >
                         <div>${coin.price?.toFixed(4) || "0.00"}</div>
@@ -195,7 +224,7 @@ const PortfolioOverview = () => {
                               : "text-neutral-400"
                           }`}
                         >
-                          {coin.change?.toFixed(2)}%
+                          {coin.change?.toFixed(2) || "0.00"}%
                         </div>
                       </Link>
                     </td>
@@ -204,7 +233,7 @@ const PortfolioOverview = () => {
                         ${((coin.amount || 0) * (coin.price || 0)).toFixed(2)}
                       </div>
                       <div className="text-sm text-neutral-400 truncate">
-                        {coin.amount} {coin.symbol.toUpperCase()}
+                        {coin.amount} {(coin.symbol || "").toUpperCase()}
                       </div>
                     </td>
                   </tr>
@@ -214,27 +243,30 @@ const PortfolioOverview = () => {
           </table>
         </div>
       </div>
-
       <div className="md:hidden space-y-4">
-        {paginatedData.length === 0 ? (
+        {portfolio.length === 0 ? (
+          <div className="text-center py-6 text-neutral-400">
+            Your portfolio is empty. Add a cryptocurrency to track your balance.
+          </div>
+        ) : paginatedData.length === 0 ? (
           <div className="text-center py-6 text-neutral-400">Loading portfolio...</div>
         ) : (
           paginatedData.map((coin) => (
             <Link
-              to={`/dashboard/cryptocurrencies/${coin.symbol.toUpperCase()}`}
-              key={coin.symbol}
+              to={`/dashboard/cryptocurrencies/${(coin.symbol || "").toUpperCase()}`}
+              key={coin.symbol || coin.id}
               className="block bg-neutral-900 rounded-xl p-4 hover:bg-neutral-800 transition"
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={coin.image}
-                  alt={coin.name}
+                  src={coin.image || ""}
+                  alt={coin.name || ""}
                   className="w-12 h-12 rounded-full flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-lg truncate">{coin.name}</div>
                   <div className="text-xs text-neutral-400 uppercase truncate">
-                    {coin.symbol.toUpperCase()}
+                    {(coin.symbol || "").toUpperCase()}
                   </div>
                 </div>
               </div>
@@ -253,7 +285,7 @@ const PortfolioOverview = () => {
                         : "text-neutral-400"
                     }`}
                   >
-                    {coin.change?.toFixed(2)}%
+                    {coin.change?.toFixed(2) || "0.00"}%
                   </div>
                 </div>
                 <div className="text-right">
@@ -262,7 +294,7 @@ const PortfolioOverview = () => {
                     ${((coin.amount || 0) * (coin.price || 0)).toFixed(2)}
                   </div>
                   <div className="text-sm text-neutral-400">
-                    {coin.amount} {coin.symbol.toUpperCase()}
+                    {coin.amount} {(coin.symbol || "").toUpperCase()}
                   </div>
                 </div>
               </div>
@@ -270,7 +302,6 @@ const PortfolioOverview = () => {
           ))
         )}
       </div>
-
       {totalPages > 1 && (
         <div className="flex justify-center mt-4 gap-2 flex-wrap">
           <button

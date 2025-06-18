@@ -45,9 +45,17 @@ export const doCreateUserWithEmailAndPassword = async (
       },
     });
 
+    // portfolio collection
     const portfolioRef = collection(db, "users", user.uid, "portfolio");
     await setDoc(doc(portfolioRef, "_placeholder"), {
       note: "Initial placeholder document.",
+      createdAt: new Date(),
+    });
+
+    // watchlist collection
+    const watchlistRef = collection(db, "users", user.uid, "watchlist");
+    await setDoc(doc(watchlistRef, "_placeholder"), {
+      note: "Initial watchlist placeholder.",
       createdAt: new Date(),
     });
 
@@ -95,6 +103,12 @@ export const doSignInWithGoogle = async () => {
     const portfolioRef = collection(db, "users", user.uid, "portfolio");
     await setDoc(doc(portfolioRef, "_placeholder"), {
       note: "Initial placeholder document.",
+      createdAt: new Date(),
+    });
+
+    const watchlistRef = collection(db, "users", user.uid, "watchlist");
+    await setDoc(doc(watchlistRef, "_placeholder"), {
+      note: "Initial watchlist placeholder.",
       createdAt: new Date(),
     });
   }

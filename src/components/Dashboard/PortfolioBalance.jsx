@@ -12,6 +12,7 @@ const PortfolioBalance = () => {
   const [changeMap, setChangeMap] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [totalChange, setTotalChange] = useState(0);
+  const [hasRealCoins, setHasRealCoins] = useState(false);
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -22,16 +23,21 @@ const PortfolioBalance = () => {
       const data = snapshot.docs.map((doc) => doc.data());
 
       setPortfolio(data);
+
+      const realCoinsExist = data.some((coin) => coin.symbol !== "_placeholder");
+      setHasRealCoins(realCoinsExist);
     };
 
     fetchPortfolio();
   }, [currentUser]);
 
   useEffect(() => {
-    if (portfolio.length === 0) return;
+    if (!hasRealCoins) return;
 
     const interval = setInterval(async () => {
-      const symbols = portfolio.map((coin) => `${coin.symbol.toUpperCase()}USDT`);
+      const symbols = portfolio
+        .filter((coin) => coin.symbol && coin.symbol !== "_placeholder")
+        .map((coin) => `${coin.symbol.toUpperCase()}USDT`);
 
       try {
         const response = await axios.get("https://api.binance.com/api/v3/ticker/24hr");
@@ -57,15 +63,17 @@ const PortfolioBalance = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [portfolio]);
+  }, [portfolio, hasRealCoins]);
 
   useEffect(() => {
-    if (portfolio.length === 0 || Object.keys(priceMap).length === 0) return;
+    if (!hasRealCoins || Object.keys(priceMap).length === 0) return;
 
     let total = 0;
     let weightedChangeSum = 0;
 
     portfolio.forEach((coin) => {
+      if (!coin.symbol || coin.symbol === "_placeholder") return;
+
       const symbol = coin.symbol.toUpperCase();
       const amount = parseFloat(coin.amount);
       const price = priceMap[symbol] || 0;
@@ -79,9 +87,9 @@ const PortfolioBalance = () => {
 
     setTotalValue(total);
     setTotalChange(weightedChangeSum / total || 0);
-  }, [priceMap, changeMap, portfolio]);
+  }, [priceMap, changeMap, portfolio, hasRealCoins]);
 
-  if (!currentUser) {
+  if (!currentUser || !hasRealCoins) {
     return null;
   }
 
